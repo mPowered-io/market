@@ -4,7 +4,7 @@
     {
       "name": "name",
       "label": "Title",
-      "placeholder": "e.g. Shapes of Desert Plants",
+      "placeholder": "e.g. quantity of microplastics",
       "help": "Enter a concise title.",
       "required": true
     },
@@ -18,7 +18,7 @@
     {
       "name": "files",
       "label": "File",
-      "placeholder": "e.g. https://file.com/file.json",
+      "placeholder": "e.g. https://example.com/my_dataset.csv",
       "help": "Please enter the URL to your data set file and click \"ADD FILE\" to validate the data. This URL will be stored encrypted after publishing. For a compute data set, your file should match the file type required by the algorithm, and should not exceed 1 GB in file size.",
       "type": "files",
       "required": true
@@ -26,7 +26,7 @@
     {
       "name": "links",
       "label": "Sample file",
-      "placeholder": "e.g. https://file.com/samplefile.json",
+      "placeholder": "e.g. https://example.com/sample_dataset.csv",
       "help": "Please enter the URL to a sample of your data set file and click \"ADD FILE\" to validate the data. This file should reveal the data structure of your data set, e.g. by including the header and one line of a CSV file. This file URL will be publicly available after publishing.",
       "type": "files"
     },
@@ -44,8 +44,8 @@
       "name": "providerUri",
       "label": "Custom Provider URL",
       "type": "providerUri",
-      "help": "Enter the URL for your custom provider or leave blank to use the default provider. [Learn more](https://github.com/oceanprotocol/provider/).",
-      "placeholder": "https://provider.polygon.oceanprotocol.com/",
+      "help": "Enter the URL for your custom provider or leave blank to use the default provider.",
+      "placeholder": "https://provider.tesnaeco.com/",
       "advanced": true
     },
     {
@@ -74,7 +74,7 @@
     {
       "name": "tags",
       "label": "Tags",
-      "placeholder": "e.g. logistics, ai",
+      "placeholder": "e.g. coral, turtles, zooplankton",
       "help": "Separate tags with comma."
     },
     {

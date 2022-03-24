@@ -27,7 +27,7 @@ export default function Seo({
 
       {isBrowser &&
         window.location &&
-        window.location.hostname !== 'oceanprotocol.com' && (
+        window.location.hostname == 'marketplace.tesnaeco.com' && (
           <meta name="robots" content="noindex,nofollow" />
         )}
 
@@ -48,7 +48,6 @@ export default function Seo({
       />
 
       <meta property="og:site_name" content={siteTitle} />
-      <meta name="twitter:creator" content="@oceanprotocol" />
       <meta name="twitter:card" content="summary_large_image" />
     </Helmet>
   )

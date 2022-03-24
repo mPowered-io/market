@@ -19,9 +19,7 @@ export default function UserPreferences(): ReactElement {
       content={
         <ul className={styles.preferencesDetails}>
           <Currency />
-          <TokenApproval />
           <Appearance darkMode={darkMode} />
-          <Debug />
         </ul>
       }
       trigger="click focus"

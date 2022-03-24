@@ -54,7 +54,6 @@ export default function Menu(): ReactElement {
 
       <div className={styles.actions}>
         <SearchBar />
-        <Networks />
         <Wallet />
         <UserPreferences />
       </div>

@@ -6,30 +6,31 @@ module.exports = {
   // const { appConfig } = useSiteMetadata()
   // return appConfig.metadataCacheUri
   metadataCacheUri:
-    process.env.METADATACACHE_URI || 'https://aquarius.oceanprotocol.com',
+    process.env.METADATACACHE_URI || 'https://aquarius.tesnaeco.com',
 
   // List of chainIds which metadata cache queries will return by default.
   // This preselects the Chains user preferences.
-  chainIds: [1, 137, 56, 1285, 246],
+  chainIds: [3],
 
   // List of all supported chainIds. Used to populate the Chains user preferences list.
-  chainIdsSupported: [1, 3, 4, 137, 80001, 1287, 56, 2021000, 1285, 246],
+  chainIdsSupported: [3],
 
   rbacUrl: process.env.GATSBY_RBAC_URL,
 
-  infuraProjectId: process.env.GATSBY_INFURA_PROJECT_ID || 'xxx',
+  infuraProjectId:
+    process.env.GATSBY_INFURA_PROJECT_ID || 'd195bf38f1f24e788160ebac692767b9',
 
   // The ETH address the marketplace fee will be sent to.
   marketFeeAddress:
     process.env.GATSBY_MARKET_FEE_ADDRESS ||
-    '0x9984b2453eC7D99a73A5B3a46Da81f197B753C8d',
+    '0xF49A4ba03f69eEf2366303e64Fc7b3a33d3f0043',
 
   // Used for conversion display, can be whatever coingecko API supports
   // see: https://api.coingecko.com/api/v3/simple/supported_vs_currencies
   currencies: [
-    'EUR',
-    'USD',
     'CAD',
+    'USD',
+    'EUR',
     'GBP',
     'SGD',
     'HKD',
@@ -55,8 +56,8 @@ module.exports = {
   // Used to show or hide the fixed, dynamic or free price options
   // tab to publishers during the price creation.
   allowFixedPricing: process.env.GATSBY_ALLOW_FIXED_PRICING || 'true',
-  allowDynamicPricing: process.env.GATSBY_ALLOW_DYNAMIC_PRICING || 'true',
-  allowFreePricing: process.env.GATSBY_ALLOW_FREE_PRICING || 'false',
+  allowDynamicPricing: process.env.GATSBY_ALLOW_DYNAMIC_PRICING || 'false',
+  allowFreePricing: process.env.GATSBY_ALLOW_FREE_PRICING || 'true',
 
   // Used to show or hide advanced settings button in asset details page
   allowAdvancedSettings: process.env.GATSBY_ALLOW_ADVANCED_SETTINGS || 'false',

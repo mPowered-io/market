@@ -8,7 +8,7 @@
       {
         "name": "name",
         "label": "New Title",
-        "placeholder": "e.g. Shapes of Desert Plants",
+        "placeholder": "e.g. quantity of microplastics",
         "help": "Enter a concise title.",
         "required": true
       },
