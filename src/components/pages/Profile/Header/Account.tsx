@@ -29,12 +29,7 @@ export default function Account({
         ) : accountId ? (
           <Blockies accountId={accountId} className={styles.image} />
         ) : (
-          <img
-            src={jellyfish}
-            className={styles.image}
-            width="96"
-            height="96"
-          />
+          <span></span>
         )}
       </figure>
 
