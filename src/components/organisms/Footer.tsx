@@ -12,7 +12,6 @@ import { useGdprMetadata } from '../../hooks/useGdprMetadata'
 export default function Footer(): ReactElement {
   const { copyright, appConfig } = useSiteMetadata()
   const { setShowPPC } = useUserPreferences()
-  const { privacyPolicySlug } = useUserPreferences()
 
   const cookies = useGdprMetadata()
 
@@ -26,7 +25,7 @@ export default function Footer(): ReactElement {
           <br />
           <Link to="/terms">Terms</Link>
           {' — '}
-          <Link to={privacyPolicySlug}>Privacy</Link>
+          <Link to="https://tesnaeco.com/privacy">Privacy</Link>
           {appConfig.privacyPreferenceCenter === 'true' && (
             <>
               {' — '}

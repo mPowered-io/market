@@ -1,0 +1,887 @@
+[
+  {
+    "timestamp": 1648915429851,
+    "files": [
+      {
+        "filename": "styles-********************.js",
+        "previous": 120,
+        "size": 120,
+        "diff": 0
+      },
+      {
+        "filename": "commons-********************.js",
+        "previous": 6123,
+        "size": 6123,
+        "diff": 0
+      },
+      {
+        "filename": "e707eac357e0574aad96ebcf7e28cf1f6d547326-********************.js",
+        "previous": 2736,
+        "size": 2736,
+        "diff": 0
+      },
+      {
+        "filename": "03b1b8ab9bd6a6397f28fcc31cb15de02c4f6411-********************.js",
+        "previous": 7160,
+        "size": 7160,
+        "diff": 0
+      },
+      {
+        "filename": "7ad93a4873dd38c6486e792692fc5e21936954ce-********************.js",
+        "previous": 3427,
+        "size": 3427,
+        "diff": 0
+      },
+      {
+        "filename": "7afb165388e0d3c9bc67156331aec09cb1ddb947-********************.js",
+        "previous": 6907,
+        "size": 0,
+        "diff": -6907
+      },
+      {
+        "filename": "2c9d830d33a9465607b1a01d2f6d27b09baa6087-********************.js",
+        "previous": 49312,
+        "size": 55937,
+        "diff": 6625
+      },
+      {
+        "filename": "a5dfb54a4547ce3975005cc471e8dc7523ce99e8-********************.js",
+        "previous": 30841,
+        "size": 30840,
+        "diff": -1
+      },
+      {
+        "filename": "e590edaefeffd17439213e1469d611be324092e3-********************.js",
+        "previous": 5783,
+        "size": 5782,
+        "diff": -1
+      },
+      {
+        "filename": "webpack-runtime-********************.js",
+        "previous": 2273,
+        "size": 2224,
+        "diff": -49
+      },
+      {
+        "filename": "061e6b60-********************.js",
+        "previous": 261091,
+        "size": 261090,
+        "diff": -1
+      },
+      {
+        "filename": "0a6e12db-********************.js",
+        "previous": 202972,
+        "size": 202972,
+        "diff": 0
+      },
+      {
+        "filename": "4a3ea9cd-********************.js",
+        "previous": 52900,
+        "size": 52902,
+        "diff": 2
+      },
+      {
+        "filename": "55a21ef8-********************.js",
+        "previous": 145822,
+        "size": 145821,
+        "diff": -1
+      },
+      {
+        "filename": "6a7a2573-********************.js",
+        "previous": 13210,
+        "size": 13209,
+        "diff": -1
+      },
+      {
+        "filename": "91472edf-********************.js",
+        "previous": 29909,
+        "size": 29910,
+        "diff": 1
+      },
+      {
+        "filename": "a318827e-********************.js",
+        "previous": 85540,
+        "size": 85540,
+        "diff": 0
+      },
+      {
+        "filename": "a782ee47-********************.js",
+        "previous": 28504,
+        "size": 28503,
+        "diff": -1
+      },
+      {
+        "filename": "app-********************.js",
+        "previous": 1255640,
+        "size": 1255623,
+        "diff": -17
+      },
+      {
+        "filename": "b0df9735-********************.js",
+        "previous": 31569,
+        "size": 31567,
+        "diff": -2
+      },
+      {
+        "filename": "component---src-components-templates-page-markdown-tsx-********************.js",
+        "previous": 1027,
+        "size": 502,
+        "diff": -525
+      },
+      {
+        "filename": "component---src-pages-404-tsx-********************.js",
+        "previous": 663,
+        "size": 663,
+        "diff": 0
+      },
+      {
+        "filename": "component---src-pages-asset-index-tsx-********************.js",
+        "previous": 60789,
+        "size": 60788,
+        "diff": -1
+      },
+      {
+        "filename": "component---src-pages-index-tsx-********************.js",
+        "previous": 6011,
+        "size": 6011,
+        "diff": 0
+      },
+      {
+        "filename": "component---src-pages-profile-index-tsx-********************.js",
+        "previous": 7135,
+        "size": 7136,
+        "diff": 1
+      },
+      {
+        "filename": "component---src-pages-publish-tsx-********************.js",
+        "previous": 8066,
+        "size": 8066,
+        "diff": 0
+      },
+      {
+        "filename": "component---src-pages-search-tsx-********************.js",
+        "previous": 2832,
+        "size": 2832,
+        "diff": 0
+      },
+      {
+        "filename": "d0d076c4-********************.js",
+        "previous": 112999,
+        "size": 113000,
+        "diff": 1
+      },
+      {
+        "filename": "df9986eb-********************.js",
+        "previous": 36295,
+        "size": 36295,
+        "diff": 0
+      },
+      {
+        "filename": "framework-********************.js",
+        "previous": 42014,
+        "size": 42013,
+        "diff": -1
+      },
+      {
+        "filename": "polyfill-********************.js",
+        "previous": 27324,
+        "size": 27324,
+        "diff": 0
+      },
+      {
+        "filename": "31-********************.js",
+        "previous": 6239,
+        "size": 4558,
+        "diff": -1681
+      },
+      {
+        "filename": "32-********************.js",
+        "previous": 4557,
+        "size": 13110,
+        "diff": 8553
+      },
+      {
+        "filename": "33-********************.js",
+        "previous": 13112,
+        "size": 0,
+        "diff": -13112
+      },
+      {
+        "filename": "styles.836a606b8bd5a1847816.css",
+        "previous": 253134,
+        "size": 0,
+        "diff": -253134
+      },
+      {
+        "filename": "styles.3d31e9da49404151fab0.css",
+        "previous": 0,
+        "size": 253077,
+        "diff": 253077
+      },
+      {
+        "filename": "30-********************.js",
+        "previous": 0,
+        "size": 6241,
+        "diff": 6241
+      }
+    ]
+  },
+  {
+    "timestamp": 1648484142022,
+    "files": [
+      {
+        "filename": "styles-********************.js",
+        "previous": 120,
+        "size": 120,
+        "diff": 0
+      },
+      {
+        "filename": "commons-********************.js",
+        "previous": 6123,
+        "size": 6123,
+        "diff": 0
+      },
+      {
+        "filename": "e707eac357e0574aad96ebcf7e28cf1f6d547326-********************.js",
+        "previous": 2736,
+        "size": 2736,
+        "diff": 0
+      },
+      {
+        "filename": "03b1b8ab9bd6a6397f28fcc31cb15de02c4f6411-********************.js",
+        "previous": 7160,
+        "size": 7160,
+        "diff": 0
+      },
+      {
+        "filename": "7ad93a4873dd38c6486e792692fc5e21936954ce-********************.js",
+        "previous": 3427,
+        "size": 3427,
+        "diff": 0
+      },
+      {
+        "filename": "7afb165388e0d3c9bc67156331aec09cb1ddb947-********************.js",
+        "previous": 6907,
+        "size": 6907,
+        "diff": 0
+      },
+      {
+        "filename": "2c9d830d33a9465607b1a01d2f6d27b09baa6087-********************.js",
+        "previous": 49312,
+        "size": 49312,
+        "diff": 0
+      },
+      {
+        "filename": "a5dfb54a4547ce3975005cc471e8dc7523ce99e8-********************.js",
+        "previous": 30841,
+        "size": 30841,
+        "diff": 0
+      },
+      {
+        "filename": "e590edaefeffd17439213e1469d611be324092e3-********************.js",
+        "previous": 5783,
+        "size": 5783,
+        "diff": 0
+      },
+      {
+        "filename": "webpack-runtime-********************.js",
+        "previous": 2274,
+        "size": 2273,
+        "diff": -1
+      },
+      {
+        "filename": "061e6b60-********************.js",
+        "previous": 261091,
+        "size": 261091,
+        "diff": 0
+      },
+      {
+        "filename": "0a6e12db-********************.js",
+        "previous": 202972,
+        "size": 202972,
+        "diff": 0
+      },
+      {
+        "filename": "4a3ea9cd-********************.js",
+        "previous": 52900,
+        "size": 52900,
+        "diff": 0
+      },
+      {
+        "filename": "55a21ef8-********************.js",
+        "previous": 145822,
+        "size": 145822,
+        "diff": 0
+      },
+      {
+        "filename": "6a7a2573-********************.js",
+        "previous": 13210,
+        "size": 13210,
+        "diff": 0
+      },
+      {
+        "filename": "91472edf-********************.js",
+        "previous": 29909,
+        "size": 29909,
+        "diff": 0
+      },
+      {
+        "filename": "a318827e-********************.js",
+        "previous": 85540,
+        "size": 85540,
+        "diff": 0
+      },
+      {
+        "filename": "a782ee47-********************.js",
+        "previous": 28504,
+        "size": 28504,
+        "diff": 0
+      },
+      {
+        "filename": "app-********************.js",
+        "previous": 1255641,
+        "size": 1255640,
+        "diff": -1
+      },
+      {
+        "filename": "b0df9735-********************.js",
+        "previous": 31569,
+        "size": 31569,
+        "diff": 0
+      },
+      {
+        "filename": "component---src-components-templates-page-markdown-tsx-********************.js",
+        "previous": 1027,
+        "size": 1027,
+        "diff": 0
+      },
+      {
+        "filename": "component---src-pages-404-tsx-********************.js",
+        "previous": 663,
+        "size": 663,
+        "diff": 0
+      },
+      {
+        "filename": "component---src-pages-asset-index-tsx-********************.js",
+        "previous": 60789,
+        "size": 60789,
+        "diff": 0
+      },
+      {
+        "filename": "component---src-pages-index-tsx-********************.js",
+        "previous": 6011,
+        "size": 6011,
+        "diff": 0
+      },
+      {
+        "filename": "component---src-pages-profile-index-tsx-********************.js",
+        "previous": 7169,
+        "size": 7135,
+        "diff": -34
+      },
+      {
+        "filename": "component---src-pages-publish-tsx-********************.js",
+        "previous": 8066,
+        "size": 8066,
+        "diff": 0
+      },
+      {
+        "filename": "component---src-pages-search-tsx-********************.js",
+        "previous": 2832,
+        "size": 2832,
+        "diff": 0
+      },
+      {
+        "filename": "d0d076c4-********************.js",
+        "previous": 112999,
+        "size": 112999,
+        "diff": 0
+      },
+      {
+        "filename": "df9986eb-********************.js",
+        "previous": 36295,
+        "size": 36295,
+        "diff": 0
+      },
+      {
+        "filename": "framework-********************.js",
+        "previous": 42014,
+        "size": 42014,
+        "diff": 0
+      },
+      {
+        "filename": "polyfill-********************.js",
+        "previous": 27324,
+        "size": 27324,
+        "diff": 0
+      },
+      {
+        "filename": "31-********************.js",
+        "previous": 6239,
+        "size": 6239,
+        "diff": 0
+      },
+      {
+        "filename": "32-********************.js",
+        "previous": 4557,
+        "size": 4557,
+        "diff": 0
+      },
+      {
+        "filename": "33-********************.js",
+        "previous": 13112,
+        "size": 13112,
+        "diff": 0
+      },
+      {
+        "filename": "styles.836a606b8bd5a1847816.css",
+        "previous": 253134,
+        "size": 253134,
+        "diff": 0
+      }
+    ]
+  },
+  {
+    "timestamp": 1648217161282,
+    "files": [
+      {
+        "filename": "styles.15cb7de29d843076be90.css",
+        "previous": 253163,
+        "size": 0,
+        "diff": -253163
+      },
+      {
+        "filename": "styles-********************.js",
+        "previous": 120,
+        "size": 120,
+        "diff": 0
+      },
+      {
+        "filename": "commons-********************.js",
+        "previous": 6123,
+        "size": 6123,
+        "diff": 0
+      },
+      {
+        "filename": "e707eac357e0574aad96ebcf7e28cf1f6d547326-********************.js",
+        "previous": 2736,
+        "size": 2736,
+        "diff": 0
+      },
+      {
+        "filename": "03b1b8ab9bd6a6397f28fcc31cb15de02c4f6411-********************.js",
+        "previous": 7160,
+        "size": 7160,
+        "diff": 0
+      },
+      {
+        "filename": "7ad93a4873dd38c6486e792692fc5e21936954ce-********************.js",
+        "previous": 3427,
+        "size": 3427,
+        "diff": 0
+      },
+      {
+        "filename": "7afb165388e0d3c9bc67156331aec09cb1ddb947-********************.js",
+        "previous": 6907,
+        "size": 6907,
+        "diff": 0
+      },
+      {
+        "filename": "2c9d830d33a9465607b1a01d2f6d27b09baa6087-********************.js",
+        "previous": 49312,
+        "size": 49312,
+        "diff": 0
+      },
+      {
+        "filename": "a5dfb54a4547ce3975005cc471e8dc7523ce99e8-********************.js",
+        "previous": 30841,
+        "size": 30841,
+        "diff": 0
+      },
+      {
+        "filename": "e590edaefeffd17439213e1469d611be324092e3-********************.js",
+        "previous": 5783,
+        "size": 5783,
+        "diff": 0
+      },
+      {
+        "filename": "webpack-runtime-********************.js",
+        "previous": 2274,
+        "size": 2274,
+        "diff": 0
+      },
+      {
+        "filename": "061e6b60-********************.js",
+        "previous": 261091,
+        "size": 261091,
+        "diff": 0
+      },
+      {
+        "filename": "0a6e12db-********************.js",
+        "previous": 202972,
+        "size": 202972,
+        "diff": 0
+      },
+      {
+        "filename": "4a3ea9cd-********************.js",
+        "previous": 52900,
+        "size": 52900,
+        "diff": 0
+      },
+      {
+        "filename": "55a21ef8-********************.js",
+        "previous": 145822,
+        "size": 145822,
+        "diff": 0
+      },
+      {
+        "filename": "6a7a2573-********************.js",
+        "previous": 13210,
+        "size": 13210,
+        "diff": 0
+      },
+      {
+        "filename": "91472edf-********************.js",
+        "previous": 29909,
+        "size": 29909,
+        "diff": 0
+      },
+      {
+        "filename": "a318827e-********************.js",
+        "previous": 85540,
+        "size": 85540,
+        "diff": 0
+      },
+      {
+        "filename": "a782ee47-********************.js",
+        "previous": 28504,
+        "size": 28504,
+        "diff": 0
+      },
+      {
+        "filename": "app-********************.js",
+        "previous": 1256717,
+        "size": 1255641,
+        "diff": -1076
+      },
+      {
+        "filename": "b0df9735-********************.js",
+        "previous": 31569,
+        "size": 31569,
+        "diff": 0
+      },
+      {
+        "filename": "component---src-components-templates-page-markdown-tsx-********************.js",
+        "previous": 1027,
+        "size": 1027,
+        "diff": 0
+      },
+      {
+        "filename": "component---src-pages-404-tsx-********************.js",
+        "previous": 663,
+        "size": 663,
+        "diff": 0
+      },
+      {
+        "filename": "component---src-pages-asset-index-tsx-********************.js",
+        "previous": 60789,
+        "size": 60789,
+        "diff": 0
+      },
+      {
+        "filename": "component---src-pages-index-tsx-********************.js",
+        "previous": 6011,
+        "size": 6011,
+        "diff": 0
+      },
+      {
+        "filename": "component---src-pages-profile-index-tsx-********************.js",
+        "previous": 7169,
+        "size": 7169,
+        "diff": 0
+      },
+      {
+        "filename": "component---src-pages-publish-tsx-********************.js",
+        "previous": 8066,
+        "size": 8066,
+        "diff": 0
+      },
+      {
+        "filename": "component---src-pages-search-tsx-********************.js",
+        "previous": 2832,
+        "size": 2832,
+        "diff": 0
+      },
+      {
+        "filename": "d0d076c4-********************.js",
+        "previous": 112999,
+        "size": 112999,
+        "diff": 0
+      },
+      {
+        "filename": "df9986eb-********************.js",
+        "previous": 36295,
+        "size": 36295,
+        "diff": 0
+      },
+      {
+        "filename": "framework-********************.js",
+        "previous": 42014,
+        "size": 42014,
+        "diff": 0
+      },
+      {
+        "filename": "polyfill-********************.js",
+        "previous": 27324,
+        "size": 27324,
+        "diff": 0
+      },
+      {
+        "filename": "31-********************.js",
+        "previous": 6239,
+        "size": 6239,
+        "diff": 0
+      },
+      {
+        "filename": "32-********************.js",
+        "previous": 4557,
+        "size": 4557,
+        "diff": 0
+      },
+      {
+        "filename": "33-********************.js",
+        "previous": 13112,
+        "size": 13112,
+        "diff": 0
+      },
+      {
+        "filename": "styles.836a606b8bd5a1847816.css",
+        "previous": 0,
+        "size": 253134,
+        "diff": 253134
+      }
+    ]
+  },
+  {
+    "timestamp": 1648151215186,
+    "files": [
+      { "filename": "page-data/404.html", "previous": 0, "size": 0, "diff": 0 },
+      {
+        "filename": "render-page.js",
+        "previous": 3837357,
+        "size": 0,
+        "diff": -3837357
+      },
+      {
+        "filename": "styles.15cb7de29d843076be90.css",
+        "previous": 0,
+        "size": 253163,
+        "diff": 253163
+      },
+      {
+        "filename": "styles-********************.js",
+        "previous": 0,
+        "size": 120,
+        "diff": 120
+      },
+      {
+        "filename": "commons-********************.js",
+        "previous": 0,
+        "size": 6123,
+        "diff": 6123
+      },
+      {
+        "filename": "e707eac357e0574aad96ebcf7e28cf1f6d547326-********************.js",
+        "previous": 0,
+        "size": 2736,
+        "diff": 2736
+      },
+      {
+        "filename": "03b1b8ab9bd6a6397f28fcc31cb15de02c4f6411-********************.js",
+        "previous": 0,
+        "size": 7160,
+        "diff": 7160
+      },
+      {
+        "filename": "7ad93a4873dd38c6486e792692fc5e21936954ce-********************.js",
+        "previous": 0,
+        "size": 3427,
+        "diff": 3427
+      },
+      {
+        "filename": "7afb165388e0d3c9bc67156331aec09cb1ddb947-********************.js",
+        "previous": 0,
+        "size": 6907,
+        "diff": 6907
+      },
+      {
+        "filename": "2c9d830d33a9465607b1a01d2f6d27b09baa6087-********************.js",
+        "previous": 0,
+        "size": 49312,
+        "diff": 49312
+      },
+      {
+        "filename": "a5dfb54a4547ce3975005cc471e8dc7523ce99e8-********************.js",
+        "previous": 0,
+        "size": 30841,
+        "diff": 30841
+      },
+      {
+        "filename": "e590edaefeffd17439213e1469d611be324092e3-********************.js",
+        "previous": 0,
+        "size": 5783,
+        "diff": 5783
+      },
+      {
+        "filename": "webpack-runtime-********************.js",
+        "previous": 0,
+        "size": 2274,
+        "diff": 2274
+      },
+      {
+        "filename": "061e6b60-********************.js",
+        "previous": 0,
+        "size": 261091,
+        "diff": 261091
+      },
+      {
+        "filename": "0a6e12db-********************.js",
+        "previous": 0,
+        "size": 202972,
+        "diff": 202972
+      },
+      {
+        "filename": "4a3ea9cd-********************.js",
+        "previous": 0,
+        "size": 52900,
+        "diff": 52900
+      },
+      {
+        "filename": "55a21ef8-********************.js",
+        "previous": 0,
+        "size": 145822,
+        "diff": 145822
+      },
+      {
+        "filename": "6a7a2573-********************.js",
+        "previous": 0,
+        "size": 13210,
+        "diff": 13210
+      },
+      {
+        "filename": "91472edf-********************.js",
+        "previous": 0,
+        "size": 29909,
+        "diff": 29909
+      },
+      {
+        "filename": "a318827e-********************.js",
+        "previous": 0,
+        "size": 85540,
+        "diff": 85540
+      },
+      {
+        "filename": "a782ee47-********************.js",
+        "previous": 0,
+        "size": 28504,
+        "diff": 28504
+      },
+      {
+        "filename": "app-********************.js",
+        "previous": 0,
+        "size": 1256717,
+        "diff": 1256717
+      },
+      {
+        "filename": "b0df9735-********************.js",
+        "previous": 0,
+        "size": 31569,
+        "diff": 31569
+      },
+      {
+        "filename": "component---src-components-templates-page-markdown-tsx-********************.js",
+        "previous": 0,
+        "size": 1027,
+        "diff": 1027
+      },
+      {
+        "filename": "component---src-pages-404-tsx-********************.js",
+        "previous": 0,
+        "size": 663,
+        "diff": 663
+      },
+      {
+        "filename": "component---src-pages-asset-index-tsx-********************.js",
+        "previous": 0,
+        "size": 60789,
+        "diff": 60789
+      },
+      {
+        "filename": "component---src-pages-index-tsx-********************.js",
+        "previous": 0,
+        "size": 6011,
+        "diff": 6011
+      },
+      {
+        "filename": "component---src-pages-profile-index-tsx-********************.js",
+        "previous": 0,
+        "size": 7169,
+        "diff": 7169
+      },
+      {
+        "filename": "component---src-pages-publish-tsx-********************.js",
+        "previous": 0,
+        "size": 8066,
+        "diff": 8066
+      },
+      {
+        "filename": "component---src-pages-search-tsx-********************.js",
+        "previous": 0,
+        "size": 2832,
+        "diff": 2832
+      },
+      {
+        "filename": "d0d076c4-********************.js",
+        "previous": 0,
+        "size": 112999,
+        "diff": 112999
+      },
+      {
+        "filename": "df9986eb-********************.js",
+        "previous": 0,
+        "size": 36295,
+        "diff": 36295
+      },
+      {
+        "filename": "framework-********************.js",
+        "previous": 0,
+        "size": 42014,
+        "diff": 42014
+      },
+      {
+        "filename": "polyfill-********************.js",
+        "previous": 0,
+        "size": 27324,
+        "diff": 27324
+      },
+      {
+        "filename": "31-********************.js",
+        "previous": 0,
+        "size": 6239,
+        "diff": 6239
+      },
+      {
+        "filename": "32-********************.js",
+        "previous": 0,
+        "size": 4557,
+        "diff": 4557
+      },
+      {
+        "filename": "33-********************.js",
+        "previous": 0,
+        "size": 13112,
+        "diff": 13112
+      }
+    ]
+  }
+]

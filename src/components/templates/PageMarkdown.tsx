@@ -3,7 +3,6 @@ import { graphql, PageProps } from 'gatsby'
 import Page from './Page'
 import styles from './PageMarkdown.module.css'
 import Container from '../atoms/Container'
-import PrivacyPolicyHeader from '../molecules/PrivacyHeader'
 
 export default function PageTemplateMarkdown(props: PageProps): ReactElement {
   const { html, frontmatter, tableOfContents, fields } = (props.data as any)
@@ -11,17 +10,9 @@ export default function PageTemplateMarkdown(props: PageProps): ReactElement {
   const { title, description } = frontmatter
   const { slug } = fields
 
-  const isPrivacy = slug.includes('/privacy/')
-
   return (
     <Page title={title} description={description} uri={props.uri} headerCenter>
       <Container narrow>
-        {isPrivacy && (
-          <PrivacyPolicyHeader
-            tableOfContents={tableOfContents}
-            policy={slug.replace('/privacy/', '')}
-          />
-        )}
         <div
           className={styles.content}
           dangerouslySetInnerHTML={{ __html: html }}
