@@ -77,6 +77,8 @@ function usePublish(): UsePublish {
     setPublishError(undefined)
     setStep(0)
 
+    providerUri = 'https://provider.tesnaeco.com'
+
     try {
       const publishedDate =
         new Date(Date.now()).toISOString().split('.')[0] + 'Z'

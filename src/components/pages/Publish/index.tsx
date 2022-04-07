@@ -45,6 +45,7 @@ function TabContent({
   publishType: MetadataMain['type']
   values: Partial<MetadataPublishFormAlgorithm | MetadataPublishFormDataset>
 }) {
+  values.providerUri = 'https://provider.tesnaeco.com'
   return (
     <article className={styles.grid}>
       {publishType === 'dataset' ? <FormPublish /> : <FormAlgoPublish />}
