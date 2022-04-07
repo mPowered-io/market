@@ -23,17 +23,21 @@ export default function Tabs({
       className={`${className && className}`}
       defaultIndex={defaultIndex}
     >
-      <TabList className={styles.tabList}>
-        {items.map((item) => (
-          <Tab
-            className={styles.tab}
-            key={item.title}
-            onClick={handleTabChange ? () => handleTabChange(item.title) : null}
-          >
-            {item.title}
-          </Tab>
-        ))}
-      </TabList>
+      {items[0]?.title != 'Use' && (
+        <TabList className={styles.tabList}>
+          {items.map((item) => (
+            <Tab
+              className={styles.tab}
+              key={item.title}
+              onClick={
+                handleTabChange ? () => handleTabChange(item.title) : null
+              }
+            >
+              {item.title}
+            </Tab>
+          ))}
+        </TabList>
+      )}
       <div className={styles.tabContent}>
         {items.map((item) => (
           <TabPanel key={item.title}>{item.content}</TabPanel>
