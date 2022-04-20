@@ -80,7 +80,8 @@ export async function transformPublishFormToDdo(
     dockerImageCustom,
     dockerImageCustomTag,
     dockerImageCustomEntrypoint,
-    dockerImageCustomChecksum
+    dockerImageCustomChecksum,
+    parameters
   } = metadata
   const { access, files, links, providerUrl, timeout } = services[0]
 
@@ -131,7 +132,10 @@ export async function transformPublishFormToDdo(
               dockerImage === 'custom'
                 ? dockerImageCustomChecksum
                 : getAlgorithmContainerPreset(dockerImage).checksum
-          }
+          },
+          ...(parameters?.length && {
+            userInput: metadata.parameters
+          })
         }
       })
   }

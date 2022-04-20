@@ -74,6 +74,12 @@
         "required": true
       },
       {
+        "name": "parameters",
+        "label": "Parameters",
+        "help": "Enter parameters for your algorithm.",
+        "type": "parameters"
+      },
+      {
         "name": "termsAndConditions",
         "label": "Terms & Conditions",
         "type": "checkbox",
