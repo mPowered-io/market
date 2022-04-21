@@ -134,7 +134,7 @@ export async function transformPublishFormToDdo(
                 : getAlgorithmContainerPreset(dockerImage).checksum
           },
           ...(parameters?.length && {
-            userInput: metadata.parameters
+            consumerParameters: metadata.parameters
           })
         }
       })

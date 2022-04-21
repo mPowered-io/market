@@ -1,5 +1,6 @@
-import React, { ReactElement, useState } from 'react'
+import React, { ReactElement, useState, ChangeEvent, FormEvent } from 'react'
 import { ErrorMessage, useField } from 'formik'
+import { InputProps } from '@shared/FormInput'
 import InputElement from '@shared/FormInput/InputElement'
 import styles from './index.module.css'
 import { initialValues } from 'src/components/Publish/_constants'
@@ -15,201 +16,216 @@ export default function Parameters(props: InputProps): ReactElement {
   const [dirtyType, setDirtyType] = useState([])
   const [dirtyOption, setDirtyOption] = useState([])
 
-  const handleTypeChange = (e: ChangeEvent<HTMLSelectElement>, index) => {
-    const { name, value } = e.target
-    const list = [...paramaterList]
+  //const handleTypeChange = (e: ChangeEvent<HTMLInputElement>, index: number) => {
+  const handleTypeChange =
+    (index: number) => (e: ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = e.target
+      const list = [...paramaterList]
 
-    list[index]['type'] = value
+      list[index]['type'] = value
 
-    if (dirtyType.indexOf(index) == -1) {
-      setDirtyType([...dirtyType, index])
-    }
-
-    if (value !== 'options') {
-      delete list[index].options
-      setDirtyOption([])
-    } else {
-      list[index].options = [{ '': '' }]
-    }
-
-    setParameterList(list)
-    helpers.setValue(list)
-  }
-
-  const handleNameChange = (e: ChangeEvent<HTMLInputElement>, index) => {
-    const { name, value } = e.target
-    const list = [...paramaterList]
-
-    list[index][name] = value
-
-    setParameterList(list)
-    helpers.setValue(list)
-  }
-
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>, index) => {
-    const { name, value } = e.target
-    const list = [...paramaterList]
-
-    list[index][name] = value
-
-    setParameterList(list)
-    helpers.setValue(list)
-  }
-
-  const handleCheckboxChange = (e, index) => {
-    const { name, checked } = e.target
-    const list = [...paramaterList]
-
-    list[index][name] = checked
-    setParameterList(list)
-    helpers.setValue(list)
-  }
-
-  const handleOptionNameChange = (e, paramIndex, optionIndex) => {
-    const { name, value } = e.target
-    const list = [...paramaterList]
-
-    list[paramIndex].options[optionIndex][value] = Object.values(
-      list[paramIndex].options[optionIndex]
-    )[0]
-    delete list[paramIndex].options[optionIndex][
-      Object.keys(list[paramIndex].options[optionIndex])[0]
-    ]
-
-    setParameterList(list)
-    helpers.setValue(list)
-
-    if (dirtyOption.indexOf(optionIndex) == -1) {
-      setDirtyOption([...dirtyOption, optionIndex])
-    }
-  }
-
-  const handleOptionValueChange = (e, paramIndex, optionIndex) => {
-    const { name, value } = e.target
-    const list = [...paramaterList]
-
-    Object.keys(list[paramIndex].options[optionIndex]).map(function (
-      key,
-      index
-    ) {
-      list[paramIndex].options[optionIndex][key] = value
-    })
-
-    setParameterList(list)
-    helpers.setValue(list)
-  }
-
-  const handleAddOptionClick = (e, paramIndex, optionIndex) => {
-    e.preventDefault()
-    const list = [...paramaterList]
-
-    if (dirtyOption.indexOf(optionIndex) == -1) {
-      setDirtyOption([...dirtyOption, optionIndex])
-    }
-
-    // check if any keys are blank
-    let oneKeyBlank = false
-    for (let i = 0; i < list[paramIndex].options.length; i++) {
-      if (Object.keys(list[paramIndex].options[i])[0] == '') {
-        oneKeyBlank = true
-        break
+      if (dirtyType.indexOf(index) == -1) {
+        setDirtyType([...dirtyType, index])
       }
-    }
 
-    if (!oneKeyBlank) {
-      list[paramIndex].options = [...list[paramIndex].options, { '': '' }]
+      if (value !== 'options') {
+        delete list[index].options
+        setDirtyOption([])
+      } else {
+        list[index].options = [{ '': '' }]
+      }
 
       setParameterList(list)
       helpers.setValue(list)
     }
-  }
 
-  const handleRemoveOptionClick = (e, paramIndex, optionIndex) => {
-    e.preventDefault()
-    const list = [...paramaterList]
-    let dirtyO = dirtyOption
+  const handleNameChange =
+    (index: number) => (e: ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = e.target
+      const list = [...paramaterList]
 
-    list[paramIndex].options.splice(optionIndex, 1)
-    setParameterList(list)
-    helpers.setValue(list)
+      list[index][name] = value
 
-    dirtyO = dirtyO.map(function (n) {
-      if (n < optionIndex) return n
-      if (n == optionIndex) return
-      if (n > optionIndex) return n - 1
-    })
-    setDirtyOption(dirtyO)
-  }
-
-  const handleAddParameterClick = (e, index) => {
-    e.preventDefault()
-    const defaultParams = {
-      type: '',
-      name: '',
-      label: '',
-      description: '',
-      required: false,
-      default: '',
-      options: [{ '': '' }]
-    }
-    let oneKeyBlank = false
-
-    if (index == -1) {
-      setParameterList([...paramaterList, defaultParams])
-      return
+      setParameterList(list)
+      helpers.setValue(list)
     }
 
-    if (dirtyName.indexOf(index) == -1) {
-      setDirtyName([...dirtyName, index])
-    }
-    if (dirtyType.indexOf(index) == -1) {
-      setDirtyType([...dirtyType, index])
+  const handleInputChange =
+    (index: number) => (e: ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = e.target
+      const list = [...paramaterList]
+
+      list[index][name] = value
+
+      setParameterList(list)
+      helpers.setValue(list)
     }
 
-    // validate this set of parameters
-    if (paramaterList[index]['type'] == 'options') {
-      for (let i = 0; i < paramaterList[index].options.length; i++) {
-        if (Object.keys(paramaterList[index].options[i])[0] == '') {
+  const handleCheckboxChange =
+    (index: number) => (e: ChangeEvent<HTMLInputElement>) => {
+      const { name, checked } = e.target
+      const list = [...paramaterList]
+
+      list[index][name] = checked
+      setParameterList(list)
+      helpers.setValue(list)
+    }
+
+  const handleOptionNameChange =
+    (paramIndex: number, optionIndex: number) =>
+    (e: ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = e.target
+      const list = [...paramaterList]
+
+      list[paramIndex].options[optionIndex][value] = Object.values(
+        list[paramIndex].options[optionIndex]
+      )[0]
+      delete list[paramIndex].options[optionIndex][
+        Object.keys(list[paramIndex].options[optionIndex])[0]
+      ]
+
+      setParameterList(list)
+      helpers.setValue(list)
+
+      if (dirtyOption.indexOf(optionIndex) == -1) {
+        setDirtyOption([...dirtyOption, optionIndex])
+      }
+    }
+
+  const handleOptionValueChange =
+    (paramIndex: number, optionIndex: number) =>
+    (e: ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = e.target
+      const list = [...paramaterList]
+
+      Object.keys(list[paramIndex].options[optionIndex]).map(function (
+        key,
+        index
+      ) {
+        list[paramIndex].options[optionIndex][key] = value
+      })
+
+      setParameterList(list)
+      helpers.setValue(list)
+    }
+
+  const handleAddOptionClick =
+    (paramIndex: number, optionIndex: number) =>
+    (e: FormEvent<HTMLButtonElement>) => {
+      e.preventDefault()
+      const list = [...paramaterList]
+
+      if (dirtyOption.indexOf(optionIndex) == -1) {
+        setDirtyOption([...dirtyOption, optionIndex])
+      }
+
+      // check if any keys are blank
+      let oneKeyBlank = false
+      for (let i = 0; i < list[paramIndex].options.length; i++) {
+        if (Object.keys(list[paramIndex].options[i])[0] == '') {
           oneKeyBlank = true
-          if (dirtyOption.indexOf(i) == -1) {
-            setDirtyOption([...dirtyOption, i])
+          break
+        }
+      }
+
+      if (!oneKeyBlank) {
+        list[paramIndex].options = [...list[paramIndex].options, { '': '' }]
+
+        setParameterList(list)
+        helpers.setValue(list)
+      }
+    }
+
+  const handleRemoveOptionClick =
+    (paramIndex: number, optionIndex: number) =>
+    (e: FormEvent<HTMLButtonElement>) => {
+      e.preventDefault()
+      const list = [...paramaterList]
+      let dirtyO = dirtyOption
+
+      list[paramIndex].options.splice(optionIndex, 1)
+      setParameterList(list)
+      helpers.setValue(list)
+
+      dirtyO = dirtyO.map(function (n) {
+        if (n < optionIndex) return n
+        if (n == optionIndex) return
+        if (n > optionIndex) return n - 1
+      })
+      setDirtyOption(dirtyO)
+    }
+
+  const handleAddParameterClick =
+    (index: number) => (e: FormEvent<HTMLButtonElement>) => {
+      e.preventDefault()
+      const defaultParams = {
+        type: '',
+        name: '',
+        label: '',
+        description: '',
+        required: false,
+        default: '',
+        options: [{ '': '' }]
+      }
+      let oneKeyBlank = false
+
+      if (index == -1) {
+        setParameterList([...paramaterList, defaultParams])
+        return
+      }
+
+      if (dirtyName.indexOf(index) == -1) {
+        setDirtyName([...dirtyName, index])
+      }
+      if (dirtyType.indexOf(index) == -1) {
+        setDirtyType([...dirtyType, index])
+      }
+
+      // validate this set of parameters
+      if (paramaterList[index]['type'] == 'options') {
+        for (let i = 0; i < paramaterList[index].options.length; i++) {
+          if (Object.keys(paramaterList[index].options[i])[0] == '') {
+            oneKeyBlank = true
+            if (dirtyOption.indexOf(i) == -1) {
+              setDirtyOption([...dirtyOption, i])
+            }
           }
         }
       }
+      if (
+        paramaterList[index]['name'] !== '' &&
+        paramaterList[index]['type'] !== '' &&
+        !oneKeyBlank
+      ) {
+        setParameterList([...paramaterList, defaultParams])
+      }
     }
-    if (
-      paramaterList[index]['name'] !== '' &&
-      paramaterList[index]['type'] !== '' &&
-      !oneKeyBlank
-    ) {
-      setParameterList([...paramaterList, defaultParams])
+
+  const handleRemoveParameterClick =
+    (index: number) => (e: FormEvent<HTMLButtonElement>) => {
+      e.preventDefault()
+      const list = [...paramaterList]
+      let dirtyN = dirtyName
+      let dirtyT = dirtyType
+
+      list.splice(index, 1)
+      setParameterList(list)
+      helpers.setValue(list)
+
+      dirtyN = dirtyN.map(function (n) {
+        if (n < index) return n
+        if (n == index) return
+        if (n > index) return n - 1
+      })
+      setDirtyName(dirtyN)
+
+      dirtyT = dirtyT.map(function (n) {
+        if (n < index) return n
+        if (n == index) return
+        if (n > index) return n - 1
+      })
+      setDirtyType(dirtyT)
     }
-  }
-
-  const handleRemoveParameterClick = (e, index) => {
-    e.preventDefault()
-    const list = [...paramaterList]
-    let dirtyN = dirtyName
-    let dirtyT = dirtyType
-
-    list.splice(index, 1)
-    setParameterList(list)
-    helpers.setValue(list)
-
-    dirtyN = dirtyN.map(function (n) {
-      if (n < index) return n
-      if (n == index) return
-      if (n > index) return n - 1
-    })
-    setDirtyName(dirtyN)
-
-    dirtyT = dirtyT.map(function (n) {
-      if (n < index) return n
-      if (n == index) return
-      if (n > index) return n - 1
-    })
-    setDirtyType(dirtyT)
-  }
 
   return (
     <div className={styles.parameters}>
@@ -221,17 +237,13 @@ export default function Parameters(props: InputProps): ReactElement {
                 dirtyType.indexOf(i) > -1 && x.type == '' ? styles.hasError : ''
               }`}
             >
-              <label htmlFor={'param_type' + i} className={styles.label}>
-                Type *:
-              </label>
+              <label className={styles.label}>Type *:</label>
               <InputElement
                 type="select"
                 name="type"
                 value={x.type}
-                field={{ value: '' }}
                 options={['text', 'options']}
-                id={'param_type' + i}
-                onChange={(e) => handleTypeChange(e, i)}
+                onChange={handleTypeChange(i)}
                 className={styles.select}
               />
             </div>
@@ -241,19 +253,13 @@ export default function Parameters(props: InputProps): ReactElement {
                 dirtyName.indexOf(i) > -1 && x.name == '' ? styles.hasError : ''
               }`}
             >
-              <label htmlFor={'param_name' + i} className={styles.label}>
-                Name *:
-              </label>
+              <label className={styles.label}>Name *:</label>
               <InputElement
                 type="text"
                 name="name"
                 value={x.name}
-                id={'param_name' + i}
                 placeholder="e.g. fname"
-                onChange={(e) => handleNameChange(e, i)}
-                onBlur={(e) => {
-                  !dirtyName.indexOf(i) && setDirtyName([...dirtyName, i])
-                }}
+                onChange={handleNameChange(i)}
                 className={styles.input}
               />
             </div>
@@ -262,7 +268,7 @@ export default function Parameters(props: InputProps): ReactElement {
               <div className={styles.field}>
                 <label className={styles.label}>Options *:</label>
                 <div className={styles.options}>
-                  {paramaterList[i]['options'].map((y, j) => {
+                  {paramaterList[i]['options'].map((y: String, j: number) => {
                     return (
                       <div
                         className={`${
@@ -276,11 +282,7 @@ export default function Parameters(props: InputProps): ReactElement {
                           name="name"
                           value={Object.keys(y)[0]}
                           placeholder="key"
-                          onChange={(e) => handleOptionNameChange(e, i, j)}
-                          onBlur={(e) => {
-                            !dirtyOption.indexOf(j) &&
-                              setDirtyOption([...dirtyOption, j])
-                          }}
+                          onChange={handleOptionNameChange(i, j)}
                           className={styles.option}
                         />
                         <InputElement
@@ -288,12 +290,12 @@ export default function Parameters(props: InputProps): ReactElement {
                           name="value"
                           value={Object.values(y)[0]}
                           placeholder="value"
-                          onChange={(e) => handleOptionValueChange(e, i, j)}
+                          onChange={handleOptionValueChange(i, j)}
                           className={styles.option}
                         />
                         {paramaterList[i]['options'].length !== 1 && (
                           <button
-                            onClick={(e) => handleRemoveOptionClick(e, i, j)}
+                            onClick={handleRemoveOptionClick(i, j)}
                             className={styles.button}
                           >
                             Remove
@@ -301,7 +303,7 @@ export default function Parameters(props: InputProps): ReactElement {
                         )}
                         {paramaterList[i]['options'].length - 1 === j && (
                           <button
-                            onClick={(e) => handleAddOptionClick(e, i, j)}
+                            onClick={handleAddOptionClick(i, j)}
                             className={styles.button}
                           >
                             Add
@@ -314,30 +316,24 @@ export default function Parameters(props: InputProps): ReactElement {
               </div>
             )}
             <div className={styles.field}>
-              <label htmlFor={'param_label' + i} className={styles.label}>
-                Label:
-              </label>
+              <label className={styles.label}>Label:</label>
               <InputElement
                 type="text"
                 name="label"
                 value={x.label}
-                id={'param_label' + i}
                 placeholder="e.g. First Name"
-                onChange={(e) => handleInputChange(e, i)}
+                onChange={handleInputChange(i)}
                 className={styles.input}
               />
             </div>
             <div className={styles.field}>
-              <label htmlFor={'param_description' + i} className={styles.label}>
-                Description:
-              </label>
+              <label className={styles.label}>Description:</label>
               <InputElement
                 type="text"
                 name="description"
                 value={x.description}
-                id={'param_description' + i}
                 placeholder="e.g. Enter your first name"
-                onChange={(e) => handleInputChange(e, i)}
+                onChange={handleInputChange(i)}
                 className={styles.input}
               />
             </div>
@@ -347,33 +343,30 @@ export default function Parameters(props: InputProps): ReactElement {
                 name="required"
                 checked={x.required}
                 options={['Required?']}
-                onChange={(e) => handleCheckboxChange(e, i)}
+                onChange={handleCheckboxChange(i)}
               />
             </div>
             <div className={styles.field}>
-              <label htmlFor={'param_default' + i} className={styles.label}>
-                Default:
-              </label>
+              <label className={styles.label}>Default:</label>
               <InputElement
                 type="text"
                 name="default"
                 value={x.default}
-                id={'param_default' + i}
                 placeholder="e.g. John"
-                onChange={(e) => handleInputChange(e, i)}
+                onChange={handleInputChange(i)}
                 className={styles.input}
               />
             </div>
             <div className={styles.field}>
               <button
-                onClick={(e) => handleRemoveParameterClick(e, i)}
+                onClick={handleRemoveParameterClick(i)}
                 className={styles.button}
               >
                 Remove
               </button>
               {paramaterList.length - 1 === i && (
                 <button
-                  onClick={(e) => handleAddParameterClick(e, i)}
+                  onClick={handleAddParameterClick(i)}
                   className={styles.button}
                 >
                   Add
@@ -384,10 +377,7 @@ export default function Parameters(props: InputProps): ReactElement {
         )
       })}
       {paramaterList.length === 0 && (
-        <button
-          onClick={(e) => handleAddParameterClick(e, -1)}
-          className={styles.button}
-        >
+        <button onClick={handleAddParameterClick(-1)} className={styles.button}>
           Add
         </button>
       )}
