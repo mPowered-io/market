@@ -44,6 +44,7 @@
   width: calc(100% - 100px);
   float: left;
   height: 43px;
+  padding-left: 10px;
 }
 
 .options {
@@ -52,16 +53,21 @@
   margin-bottom: 10px;
 }
 
+.options > div {
+  width: 100%;
+  float: left;
+}
+
 .option {
-  width: calc(50% - 85px);
+  width: calc(50% - 125px);
   float: left;
   margin: 0 10px 10px 0;
 }
 
 .button {
-  width: 65px;
-  height: 43px;
   margin: 0 10px 10px 0;
+}
+.button:last-child {
 }
 
 .error {

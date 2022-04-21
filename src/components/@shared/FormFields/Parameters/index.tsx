@@ -1,14 +1,12 @@
 import React, { ReactElement, useState, ChangeEvent, FormEvent } from 'react'
-import { ErrorMessage, useField } from 'formik'
+import { useField } from 'formik'
 import { InputProps } from '@shared/FormInput'
 import InputElement from '@shared/FormInput/InputElement'
 import styles from './index.module.css'
-import { initialValues } from 'src/components/Publish/_constants'
+import Button from '@shared/atoms/Button'
 
 // https://www.cluemediator.com/add-or-remove-input-fields-dynamically-with-reactjs
-// TODO: fix Warning: Each child in a list should have a unique "key" prop.
 export default function Parameters(props: InputProps): ReactElement {
-  const [isLoading, setIsLoading] = useState(false)
   const [field, meta, helpers] = useField(props.name)
   const [paramaterList, setParameterList] = useState([])
 
@@ -16,19 +14,18 @@ export default function Parameters(props: InputProps): ReactElement {
   const [dirtyType, setDirtyType] = useState([])
   const [dirtyOption, setDirtyOption] = useState([])
 
-  //const handleTypeChange = (e: ChangeEvent<HTMLInputElement>, index: number) => {
   const handleTypeChange =
     (index: number) => (e: ChangeEvent<HTMLInputElement>) => {
       const { name, value } = e.target
       const list = [...paramaterList]
 
-      list[index]['type'] = value
+      list[index].type = value
 
-      if (dirtyType.indexOf(index) == -1) {
+      if (dirtyType.indexOf(index) === -1) {
         setDirtyType([...dirtyType, index])
       }
 
-      if (value !== 'options') {
+      if (value !== 'select') {
         delete list[index].options
         setDirtyOption([])
       } else {
@@ -87,7 +84,7 @@ export default function Parameters(props: InputProps): ReactElement {
       setParameterList(list)
       helpers.setValue(list)
 
-      if (dirtyOption.indexOf(optionIndex) == -1) {
+      if (dirtyOption.indexOf(optionIndex) === -1) {
         setDirtyOption([...dirtyOption, optionIndex])
       }
     }
@@ -98,10 +95,7 @@ export default function Parameters(props: InputProps): ReactElement {
       const { name, value } = e.target
       const list = [...paramaterList]
 
-      Object.keys(list[paramIndex].options[optionIndex]).map(function (
-        key,
-        index
-      ) {
+      Object.keys(list[paramIndex].options[optionIndex]).map((key) => {
         list[paramIndex].options[optionIndex][key] = value
       })
 
@@ -115,14 +109,14 @@ export default function Parameters(props: InputProps): ReactElement {
       e.preventDefault()
       const list = [...paramaterList]
 
-      if (dirtyOption.indexOf(optionIndex) == -1) {
+      if (dirtyOption.indexOf(optionIndex) === -1) {
         setDirtyOption([...dirtyOption, optionIndex])
       }
 
       // check if any keys are blank
       let oneKeyBlank = false
       for (let i = 0; i < list[paramIndex].options.length; i++) {
-        if (Object.keys(list[paramIndex].options[i])[0] == '') {
+        if (Object.keys(list[paramIndex].options[i])[0] === '') {
           oneKeyBlank = true
           break
         }
@@ -147,9 +141,9 @@ export default function Parameters(props: InputProps): ReactElement {
       setParameterList(list)
       helpers.setValue(list)
 
-      dirtyO = dirtyO.map(function (n) {
+      dirtyO = dirtyO.map((n) => {
         if (n < optionIndex) return n
-        if (n == optionIndex) return
+        if (n === optionIndex) return
         if (n > optionIndex) return n - 1
       })
       setDirtyOption(dirtyO)
@@ -169,32 +163,32 @@ export default function Parameters(props: InputProps): ReactElement {
       }
       let oneKeyBlank = false
 
-      if (index == -1) {
+      if (index === -1) {
         setParameterList([...paramaterList, defaultParams])
         return
       }
 
-      if (dirtyName.indexOf(index) == -1) {
+      if (dirtyName.indexOf(index) === -1) {
         setDirtyName([...dirtyName, index])
       }
-      if (dirtyType.indexOf(index) == -1) {
+      if (dirtyType.indexOf(index) === -1) {
         setDirtyType([...dirtyType, index])
       }
 
       // validate this set of parameters
-      if (paramaterList[index]['type'] == 'options') {
+      if (paramaterList[index].type === 'select') {
         for (let i = 0; i < paramaterList[index].options.length; i++) {
-          if (Object.keys(paramaterList[index].options[i])[0] == '') {
+          if (Object.keys(paramaterList[index].options[i])[0] === '') {
             oneKeyBlank = true
-            if (dirtyOption.indexOf(i) == -1) {
+            if (dirtyOption.indexOf(i) === -1) {
               setDirtyOption([...dirtyOption, i])
             }
           }
         }
       }
       if (
-        paramaterList[index]['name'] !== '' &&
-        paramaterList[index]['type'] !== '' &&
+        paramaterList[index].name !== '' &&
+        paramaterList[index].type !== '' &&
         !oneKeyBlank
       ) {
         setParameterList([...paramaterList, defaultParams])
@@ -212,16 +206,16 @@ export default function Parameters(props: InputProps): ReactElement {
       setParameterList(list)
       helpers.setValue(list)
 
-      dirtyN = dirtyN.map(function (n) {
+      dirtyN = dirtyN.map((n) => {
         if (n < index) return n
-        if (n == index) return
+        if (n === index) return
         if (n > index) return n - 1
       })
       setDirtyName(dirtyN)
 
-      dirtyT = dirtyT.map(function (n) {
+      dirtyT = dirtyT.map((n) => {
         if (n < index) return n
-        if (n == index) return
+        if (n === index) return
         if (n > index) return n - 1
       })
       setDirtyType(dirtyT)
@@ -229,12 +223,14 @@ export default function Parameters(props: InputProps): ReactElement {
 
   return (
     <div className={styles.parameters}>
-      {paramaterList.map((x, i) => {
+      {paramaterList.map((x: string, i: number) => {
         return (
-          <div className={styles.parameter}>
+          <div key={i} className={styles.parameter}>
             <div
               className={`${styles.field} ${
-                dirtyType.indexOf(i) > -1 && x.type == '' ? styles.hasError : ''
+                dirtyType.indexOf(i) > -1 && x.type === ''
+                  ? styles.hasError
+                  : ''
               }`}
             >
               <label className={styles.label}>Type *:</label>
@@ -242,7 +238,7 @@ export default function Parameters(props: InputProps): ReactElement {
                 type="select"
                 name="type"
                 value={x.type}
-                options={['text', 'options']}
+                options={['', 'text', 'select']}
                 onChange={handleTypeChange(i)}
                 className={styles.select}
               />
@@ -250,7 +246,9 @@ export default function Parameters(props: InputProps): ReactElement {
 
             <div
               className={`${styles.field} ${
-                dirtyName.indexOf(i) > -1 && x.name == '' ? styles.hasError : ''
+                dirtyName.indexOf(i) > -1 && x.name === ''
+                  ? styles.hasError
+                  : ''
               }`}
             >
               <label className={styles.label}>Name *:</label>
@@ -264,15 +262,17 @@ export default function Parameters(props: InputProps): ReactElement {
               />
             </div>
 
-            {paramaterList[i]['type'] === 'options' && (
+            {paramaterList[i].type === 'select' && (
               <div className={styles.field}>
                 <label className={styles.label}>Options *:</label>
                 <div className={styles.options}>
-                  {paramaterList[i]['options'].map((y: String, j: number) => {
+                  {paramaterList[i].options.map((y: string, j: number) => {
                     return (
                       <div
+                        key={j}
                         className={`${
-                          dirtyOption.indexOf(j) > -1 && Object.keys(y)[0] == ''
+                          dirtyOption.indexOf(j) > -1 &&
+                          Object.keys(y)[0] === ''
                             ? styles.hasError
                             : ''
                         }`}
@@ -293,22 +293,26 @@ export default function Parameters(props: InputProps): ReactElement {
                           onChange={handleOptionValueChange(i, j)}
                           className={styles.option}
                         />
-                        {paramaterList[i]['options'].length !== 1 && (
-                          <button
-                            onClick={handleRemoveOptionClick(i, j)}
-                            className={styles.button}
-                          >
-                            Remove
-                          </button>
-                        )}
-                        {paramaterList[i]['options'].length - 1 === j && (
-                          <button
-                            onClick={handleAddOptionClick(i, j)}
-                            className={styles.button}
-                          >
-                            Add
-                          </button>
-                        )}
+                        <div>
+                          {paramaterList[i].options.length !== 1 && (
+                            <Button
+                              style="primary"
+                              onClick={handleRemoveOptionClick(i, j)}
+                              className={styles.button}
+                            >
+                              Remove
+                            </Button>
+                          )}
+                          {paramaterList[i].options.length - 1 === j && (
+                            <Button
+                              style="primary"
+                              onClick={handleAddOptionClick(i, j)}
+                              className={styles.button}
+                            >
+                              Add
+                            </Button>
+                          )}
+                        </div>
                       </div>
                     )
                   })}
@@ -358,29 +362,37 @@ export default function Parameters(props: InputProps): ReactElement {
               />
             </div>
             <div className={styles.field}>
-              <button
+              <Button
+                style="primary"
                 onClick={handleRemoveParameterClick(i)}
                 className={styles.button}
               >
                 Remove
-              </button>
+              </Button>
               {paramaterList.length - 1 === i && (
-                <button
+                <Button
+                  style="primary"
                   onClick={handleAddParameterClick(i)}
                   className={styles.button}
                 >
                   Add
-                </button>
+                </Button>
               )}
+              <span />
             </div>
           </div>
         )
       })}
       {paramaterList.length === 0 && (
-        <button onClick={handleAddParameterClick(-1)} className={styles.button}>
+        <Button
+          style="primary"
+          onClick={handleAddParameterClick(-1)}
+          className={styles.button}
+        >
           Add
-        </button>
+        </Button>
       )}
+      <span />
     </div>
   )
 }

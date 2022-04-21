@@ -23,6 +23,18 @@ const validationMetadata = {
     .required('Required'),
   author: Yup.string().required('Required'),
   tags: Yup.string().nullable(),
+  parameters: Yup.array().of(
+    Yup.object().shape({
+      type: Yup.string().required(),
+      name: Yup.string().required(),
+      options: Yup.array().when('type', (type, schema) => {
+        if (type === 'select') {
+          return schema.of(Yup.object())
+        }
+        return schema.nullable()
+      })
+    })
+  ),
   termsAndConditions: Yup.boolean()
     .required('Required')
     .isTrue('Please agree to the Terms and Conditions.')
