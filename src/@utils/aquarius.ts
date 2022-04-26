@@ -229,7 +229,7 @@ export async function getAlgorithmDatasetsForCompute(
     chainIds: [datasetChainId],
     filters: [
       getFilterTerm(
-        'service.compite.publisherTrustedAlgorithms.did',
+        'service.compute.publisherTrustedAlgorithms.did',
         algorithmId
       )
     ],

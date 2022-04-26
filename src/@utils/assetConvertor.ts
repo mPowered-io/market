@@ -29,10 +29,11 @@ export async function transformAssetToAssetSelection(
       })
       const algorithmAsset: AssetSelectionAsset = {
         did: asset.id,
-        name: asset.datatokens[0].name,
+        name: asset.metadata.name,
         price: asset.accessDetails.price,
         checked: selected,
-        symbol: asset.datatokens[0].symbol
+        symbol: asset.datatokens[0].symbol,
+        parameters: asset.metadata.algorithm?.consumerParameters ?? []
       }
       selected
         ? algorithmList.unshift(algorithmAsset)

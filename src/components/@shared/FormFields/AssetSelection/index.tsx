@@ -16,6 +16,7 @@ export interface AssetSelectionAsset {
   price: string
   checked: boolean
   symbol: string
+  parameters: array
 }
 
 function Empty() {
@@ -33,6 +34,7 @@ export default function AssetSelection({
   disabled?: boolean
 }): JSX.Element {
   const [searchValue, setSearchValue] = useState('')
+  const [selectedAlgo, setSelectedAlgo] = useState('')
 
   const styleClassesInput = cx({
     input: true,
@@ -42,6 +44,58 @@ export default function AssetSelection({
 
   function handleSearchInput(e: ChangeEvent<HTMLInputElement>) {
     setSearchValue(e.target.value)
+  }
+
+  function handleAlgorithmSelect(e: ClickEvent<HTMLInputElement>) {
+    setSelectedAlgo(e.target.value)
+
+    //console.log(e.target.value)
+    let asset
+    for (let i = 0; i < assets.length; i++) {
+      if (assets[i].did === e.target.value) {
+        asset = assets[i]
+        break
+      }
+    }
+    if (asset.parameters?.length) {
+      for (let i = 0; i < asset.parameters.length; i++) {
+        console.log(asset.parameters[i])
+      }
+    }
+  }
+
+  function Parameters({ did, params }) {
+    if (!Array.isArray(params) || !params.length) {
+      return null
+    }
+
+    return (
+      <div>
+        {params.map((param, i) => (
+          <div key={i}>
+            {param.description && <p>{param.description}</p>}
+            <label>{param.label}</label>
+            {param.type === 'text' && (
+              <input
+                type="text"
+                name={param.name}
+                required={param.required}
+                defaultValue={param.default}
+              />
+            )}
+            {param.type === 'select' && (
+              <select name={param.name} required={param.required}>
+                {param.options.map((option, j) => (
+                  <option value={Object.keys(option)[j]}>
+                    {Object.values(option)[j]}
+                  </option>
+                ))}
+              </select>
+            )}
+          </div>
+        ))}
+      </div>
+    )
   }
 
   return (
@@ -82,6 +136,7 @@ export default function AssetSelection({
                   {...props}
                   disabled={disabled}
                   value={asset.did}
+                  onClick={handleAlgorithmSelect}
                 />
                 <label
                   className={styles.label}
@@ -105,6 +160,10 @@ export default function AssetSelection({
                   <Dotdotdot clamp={1} tagName="code" className={styles.did}>
                     {asset.symbol} | {asset.did}
                   </Dotdotdot>
+
+                  {selectedAlgo == asset.did && asset.parameters?.length && (
+                    <Parameters did={asset.did} params={asset.parameters} />
+                  )}
                 </label>
 
                 <PriceUnit

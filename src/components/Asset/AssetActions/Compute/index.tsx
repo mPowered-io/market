@@ -129,8 +129,8 @@ export default function Compute({
       chainIds: [chainId],
       sort: { sortBy: SortTermOptions.Created },
       filters: [
-        getFilterTerm('service.attributes.main.type', 'algorithm'),
-        getFilterTerm('id', algorithmDidList)
+        //getFilterTerm('service.attributes.main.type', 'algorithm'),
+        //getFilterTerm('id', algorithmDidList)
       ]
     } as BaseQueryParams
 
