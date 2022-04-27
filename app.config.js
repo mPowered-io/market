@@ -13,7 +13,7 @@ module.exports = {
   chainIds: [3],
 
   // List of all supported chainIds. Used to populate the Chains user preferences list.
-  chainIdsSupported: [3],
+  chainIdsSupported: [3, 137],
 
   rbacUrl: process.env.GATSBY_RBAC_URL,
 
@@ -60,7 +60,7 @@ module.exports = {
   allowFreePricing: process.env.GATSBY_ALLOW_FREE_PRICING || 'true',
 
   // Used to show or hide advanced settings button in asset details page
-  allowAdvancedSettings: process.env.GATSBY_ALLOW_ADVANCED_SETTINGS || 'false',
+  allowAdvancedSettings: process.env.GATSBY_ALLOW_ADVANCED_SETTINGS || 'true',
   allowAdvancedPublishSettings:
     process.env.GATSBY_ALLOW_ADVANCED_PUBLISH_SETTINGS || 'false',
   credentialType: process.env.GATSBY_CREDENTIAL_TYPE || 'address',
