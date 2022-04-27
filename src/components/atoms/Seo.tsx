@@ -49,6 +49,7 @@ export default function Seo({
 
       <meta property="og:site_name" content={siteTitle} />
       <meta name="twitter:card" content="summary_large_image" />
+      <script src="https://kit.fontawesome.com/e2e3dd11e3.js"></script>
     </Helmet>
   )
 }

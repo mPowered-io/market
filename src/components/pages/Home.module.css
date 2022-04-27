@@ -16,3 +16,21 @@
 .section [class*='button'] {
   margin-top: var(--spacer);
 }
+
+.explore {
+}
+.explore a {
+  text-align: center;
+  display: block;
+  float: left;
+  width: 25%;
+}
+.explore a span {
+  font-size: 3em;
+  padding: 10px;
+}
+
+.explore a:hover,
+.explore a:focus {
+  background-color: lightgrey;
+}

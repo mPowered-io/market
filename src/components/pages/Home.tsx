@@ -174,6 +174,97 @@ export default function HomePage(): ReactElement {
   return (
     <Permission eventType="browse">
       <>
+        <div className={styles.explore}>
+          <a
+            href="/search?sort=_score&sortOrder=desc&text=weather"
+            class="col text-decoration-none text-dark py-2"
+          >
+            <span
+              class="fas fa-cloud"
+              style={{ color: 'silver' }}
+              aria-hidden="true"
+            ></span>
+            <h5>Weather</h5>
+          </a>
+          <a
+            href="/search?sort=_score&sortOrder=desc&text=fisheries"
+            class="col text-decoration-none text-dark py-2"
+          >
+            <span
+              class="fas fa-fish"
+              style={{ color: 'seagreen' }}
+              aria-hidden="true"
+            ></span>
+            <h5>Fisheries</h5>
+          </a>
+          <a
+            href="/search?sort=_score&sortOrder=desc&text=offshore"
+            class="col text-decoration-none text-dark py-2"
+          >
+            <span
+              class="fas fa-wind"
+              style={{ color: 'midnightblue' }}
+              aria-hidden="true"
+            ></span>
+            <h5>Offshore</h5>
+          </a>
+          <a
+            href="/search?sort=_score&sortOrder=desc&text=aquaculture"
+            class="col text-decoration-none text-dark py-2"
+          >
+            <span
+              class="fas fa-water"
+              style={{ color: 'aquamarine' }}
+              aria-hidden="true"
+            ></span>
+            <h5>Aquaculture</h5>
+          </a>
+          <a
+            href="/search?sort=_score&sortOrder=desc&text=shipping"
+            class="col text-decoration-none text-dark py-2"
+          >
+            <span
+              class="fas fa-anchor"
+              style={{ color: 'indigo' }}
+              aria-hidden="true"
+            ></span>
+            <h5>Shipping</h5>
+          </a>
+          <a
+            href="/search?sort=_score&sortOrder=desc&text=tourism"
+            class="col text-decoration-none text-dark py-2"
+          >
+            <span
+              class="fas fa-ship"
+              style={{ color: 'Goldenrod' }}
+              aria-hidden="true"
+            ></span>
+            <h5>Tourism</h5>
+          </a>
+          <a
+            href="/search?sort=_score&sortOrder=desc&text=bioresources"
+            class="col text-decoration-none text-dark py-2"
+          >
+            <span
+              class="fas fa-dna"
+              style={{ color: 'green' }}
+              aria-hidden="true"
+            ></span>
+            <h5>Bioresources</h5>
+          </a>
+          <a
+            href="/search?sort=_score&sortOrder=desc&text=defence"
+            class="col text-decoration-none text-dark py-2"
+          >
+            <span
+              class="fas fa-satellite"
+              style={{ color: 'firebrick' }}
+              aria-hidden="true"
+            ></span>
+            <h5>Defence</h5>
+          </a>
+        </div>
+
         {queryLatest && (
           <SectionQueryResult
             title="Recently Published"
