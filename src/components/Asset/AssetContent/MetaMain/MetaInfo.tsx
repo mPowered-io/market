@@ -1,4 +1,3 @@
-import { Asset } from '@oceanprotocol/lib'
 import AssetType from '@shared/AssetType'
 import Time from '@shared/atoms/Time'
 import Publisher from '@shared/Publisher'
@@ -10,7 +9,7 @@ export default function MetaInfo({
   asset,
   nftPublisher
 }: {
-  asset: Asset
+  asset: AssetExtended
   nftPublisher: string
 }): ReactElement {
   const isCompute = Boolean(getServiceByName(asset, 'compute'))

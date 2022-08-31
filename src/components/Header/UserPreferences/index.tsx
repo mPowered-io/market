@@ -8,12 +8,12 @@ import Caret from '@images/caret.svg'
 import useDarkMode from 'use-dark-mode'
 import Appearance from './Appearance'
 import TokenApproval from './TokenApproval'
-import { useSiteMetadata } from '@hooks/useSiteMetadata'
+import { useMarketMetadata } from '@context/MarketMetadata'
 
 export default function UserPreferences(): ReactElement {
-  const { appConfig } = useSiteMetadata()
+  const { appConfig } = useMarketMetadata()
   // Calling this here because <Style /> is not mounted on first load
-  const darkMode = useDarkMode(false, appConfig.darkModeConfig)
+  const darkMode = useDarkMode(false, appConfig?.darkModeConfig)
 
   return (
     <Tooltip
@@ -28,8 +28,10 @@ export default function UserPreferences(): ReactElement {
       trigger="click focus"
       className={styles.preferences}
     >
-      <Cog aria-label="Preferences" className={styles.icon} />
-      <Caret aria-hidden="true" className={styles.caret} />
+      <>
+        <Cog aria-label="Preferences" className={styles.icon} />
+        <Caret aria-hidden="true" className={styles.caret} />
+      </>
     </Tooltip>
   )
 }

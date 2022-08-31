@@ -7,8 +7,8 @@ import { retrieveAsset } from '@utils/aquarius'
 import Results from './Results'
 import styles from './Details.module.css'
 import { useCancelToken } from '@hooks/useCancelToken'
-import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import MetaItem from '../../../Asset/AssetContent/MetaItem'
+import { useMarketMetadata } from '@context/MarketMetadata'
 
 function Asset({
   title,
@@ -33,17 +33,20 @@ function Asset({
         </a>
       </h3>
       <p className={styles.assetMeta}>
-        {symbol} | <code>{did}</code>
+        <span className={styles.assetMeta}> {`${symbol} | `}</span>
+        <code className={styles.assetMeta}>{did}</code>
       </p>
     </div>
   )
 }
 
 function DetailsAssets({ job }: { job: ComputeJobMetaData }) {
-  const { appConfig } = useSiteMetadata()
+  const { appConfig } = useMarketMetadata()
+  const newCancelToken = useCancelToken()
+
   const [algoName, setAlgoName] = useState<string>()
   const [algoDtSymbol, setAlgoDtSymbol] = useState<string>()
-  const newCancelToken = useCancelToken()
+
   useEffect(() => {
     async function getAlgoMetadata() {
       const ddo = await retrieveAsset(job.algoDID, newCancelToken())
@@ -51,7 +54,7 @@ function DetailsAssets({ job }: { job: ComputeJobMetaData }) {
       setAlgoName(ddo?.metadata.name)
     }
     getAlgoMetadata()
-  }, [appConfig.metadataCacheUri, job.algoDID])
+  }, [appConfig.metadataCacheUri, job.algoDID, newCancelToken])
 
   return (
     <>
@@ -97,12 +100,6 @@ export default function Details({
             />
           )}
           <MetaItem title="Job ID" content={<code>{job.jobId}</code>} />
-          {/* {job.resultsDid && (
-            <MetaItem
-              title="Published Results DID"
-              content={<code>{job.resultsDid}</code>}
-            />
-          )} */}
         </div>
       </Modal>
     </>

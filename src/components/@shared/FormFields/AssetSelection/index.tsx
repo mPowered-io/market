@@ -133,6 +133,8 @@ export default function AssetSelection({
                   className={styleClassesInput + ' ' + styles.params}
                   defaultChecked={asset.checked}
                   {...props}
+                  defaultChecked={asset.checked}
+                  type={multiple ? 'checkbox' : 'radio'}
                   disabled={disabled}
                   value={asset.did}
                   onClick={handleAlgorithmSelect}

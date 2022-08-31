@@ -7,25 +7,18 @@ import React, {
   useCallback,
   ReactNode
 } from 'react'
-import {
-  getPoolSharesData,
-  getUserSales,
-  getUserTokenOrders
-} from '@utils/subgraph'
+import { getUserSales, getUserTokenOrders } from '@utils/subgraph'
 import { useUserPreferences } from './UserPreferences'
-import { PoolShares_poolShares as PoolShare } from '../@types/subgraph/PoolShares'
 import { Asset, LoggerInstance } from '@oceanprotocol/lib'
 import { getDownloadAssets, getPublishedAssets } from '@utils/aquarius'
-import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import { accountTruncate } from '@utils/web3'
 import axios, { CancelToken } from 'axios'
 import get3BoxProfile from '@utils/profile'
 import web3 from 'web3'
+import { useMarketMetadata } from './MarketMetadata'
 
 interface ProfileProviderValue {
   profile: Profile
-  poolShares: PoolShare[]
-  isPoolSharesLoading: boolean
   assets: Asset[]
   assetsTotal: number
   isEthAddress: boolean
@@ -49,7 +42,7 @@ function ProfileProvider({
   children: ReactNode
 }): ReactElement {
   const { chainIds } = useUserPreferences()
-  const { appConfig } = useSiteMetadata()
+  const { appConfig } = useMarketMetadata()
 
   const [isEthAddress, setIsEthAddress] = useState<boolean>()
 
@@ -120,55 +113,6 @@ function ProfileProvider({
       cancelTokenSource.cancel()
     }
   }, [accountId, accountEns, isEthAddress])
-
-  //
-  // POOL SHARES
-  //
-  const [poolShares, setPoolShares] = useState<PoolShare[]>()
-  const [isPoolSharesLoading, setIsPoolSharesLoading] = useState<boolean>(false)
-  const [poolSharesInterval, setPoolSharesInterval] = useState<NodeJS.Timeout>()
-
-  const fetchPoolShares = useCallback(
-    async (accountId, chainIds, isEthAddress) => {
-      if (!accountId || !chainIds || !isEthAddress) return
-
-      try {
-        setIsPoolSharesLoading(true)
-        const poolShares = await getPoolSharesData(accountId, chainIds)
-        setPoolShares(poolShares)
-        LoggerInstance.log(
-          `[profile] Fetched ${poolShares.length} pool shares.`,
-          poolShares
-        )
-      } catch (error) {
-        LoggerInstance.error('Error fetching pool shares: ', error.message)
-      } finally {
-        setIsPoolSharesLoading(false)
-      }
-    },
-    []
-  )
-
-  useEffect(() => {
-    async function init() {
-      await fetchPoolShares(accountId, chainIds, isEthAddress)
-
-      if (poolSharesInterval) return
-
-      const interval = setInterval(async () => {
-        LoggerInstance.log(
-          `[profile] Re-fetching pool shares after ${refreshInterval / 1000}s.`
-        )
-        await fetchPoolShares(accountId, chainIds, isEthAddress)
-      }, refreshInterval)
-      setPoolSharesInterval(interval)
-    }
-    init()
-
-    return () => {
-      clearInterval(poolSharesInterval)
-    }
-  }, [poolSharesInterval, fetchPoolShares, accountId, chainIds, isEthAddress])
 
   //
   // PUBLISHED ASSETS
@@ -300,8 +244,6 @@ function ProfileProvider({
     <ProfileContext.Provider
       value={{
         profile,
-        poolShares,
-        isPoolSharesLoading,
         assets,
         assetsTotal,
         isEthAddress,

@@ -5,7 +5,12 @@ import { FormikContextType, useFormikContext } from 'formik'
 import { FormPublishData } from '../_types'
 import { wizardSteps } from '../_constants'
 import SuccessConfetti from '@shared/SuccessConfetti'
-import { useWeb3 } from '../../../@context/Web3'
+import { useWeb3 } from '@context/Web3'
+import { useRouter } from 'next/router'
+import Tooltip from '@shared/atoms/Tooltip'
+import AvailableNetworks from 'src/components/Publish/AvailableNetworks'
+import Info from '@images/info.svg'
+import Loader from '@shared/atoms/Loader'
 
 export default function Actions({
   scrollToRef,
@@ -14,12 +19,13 @@ export default function Actions({
   scrollToRef: RefObject<any>
   did: string
 }): ReactElement {
+  const router = useRouter()
+  const { isSupportedOceanNetwork } = useWeb3()
   const {
     values,
     errors,
     isValid,
-    isSubmitting,
-    setFieldValue
+    isSubmitting
   }: FormikContextType<FormPublishData> = useFormikContext()
   const { connect, accountId } = useWeb3()
 
@@ -30,22 +36,34 @@ export default function Actions({
     await connect()
   }
 
+  function handleAction(action: string) {
+    const currentStep: string = router.query.step as string
+    router.push({
+      pathname: `${router.pathname}`,
+      query: { step: parseInt(currentStep) + (action === 'next' ? +1 : -1) }
+    })
+    scrollToRef.current.scrollIntoView()
+  }
+
   function handleNext(e: FormEvent) {
     e.preventDefault()
-    setFieldValue('user.stepCurrent', values.user.stepCurrent + 1)
-    scrollToRef.current.scrollIntoView()
+    handleAction('next')
   }
 
   function handlePrevious(e: FormEvent) {
     e.preventDefault()
-    setFieldValue('user.stepCurrent', values.user.stepCurrent - 1)
-    scrollToRef.current.scrollIntoView()
+    handleAction('prev')
   }
 
   const isContinueDisabled =
     (values.user.stepCurrent === 1 && errors.metadata !== undefined) ||
     (values.user.stepCurrent === 2 && errors.services !== undefined) ||
     (values.user.stepCurrent === 3 && errors.pricing !== undefined)
+
+  const hasSubmitError =
+    values.feedback?.[1].status === 'error' ||
+    values.feedback?.[2].status === 'error' ||
+    values.feedback?.[3].status === 'error'
 
   return (
     <footer className={styles.actions}>
@@ -78,13 +96,30 @@ export default function Actions({
             <Button type="submit" style="primary" onClick={handleActivation}>
               Connect Wallet
             </Button>
+          ) : !isSupportedOceanNetwork ? (
+            <Tooltip content={<AvailableNetworks />}>
+              <Button
+                type="submit"
+                style="primary"
+                disabled
+                className={styles.infoButton}
+              >
+                Unsupported Network <Info className={styles.infoIcon} />
+              </Button>
+            </Tooltip>
           ) : (
             <Button
               type="submit"
               style="primary"
               disabled={isSubmitting || !isValid}
             >
-              Submit
+              {isSubmitting ? (
+                <Loader white />
+              ) : hasSubmitError ? (
+                'Retry'
+              ) : (
+                'Submit'
+              )}
             </Button>
           )}
         </>

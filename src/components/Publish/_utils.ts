@@ -1,5 +1,4 @@
 import {
-  approve,
   Config,
   DDO,
   Erc20CreateParams,
@@ -10,29 +9,22 @@ import {
   Metadata,
   NftCreateData,
   NftFactory,
-  PoolCreationParams,
   Service,
   ZERO_ADDRESS
 } from '@oceanprotocol/lib'
 import { mapTimeoutStringToSeconds } from '@utils/ddo'
 import { generateNftCreateData } from '@utils/nft'
 import { getEncryptedFiles } from '@utils/provider'
-import { getSiteMetadata } from '@utils/siteConfig'
-import Decimal from 'decimal.js'
 import slugify from 'slugify'
 import Web3 from 'web3'
+import { algorithmContainerPresets } from './_constants'
+import { FormPublishData, MetadataAlgorithmContainer } from './_types'
 import {
-  algorithmContainerPresets,
-  MetadataAlgorithmContainer
-} from './_constants'
-import { FormPublishData } from './_types'
-
-export function getFieldContent(
-  fieldName: string,
-  fields: FormFieldContent[]
-): FormFieldContent {
-  return fields.filter((field: FormFieldContent) => field.name === fieldName)[0]
-}
+  marketFeeAddress,
+  publisherMarketOrderFee,
+  publisherMarketFixedSwapFee
+} from '../../../app.config'
+import { sanitizeUrl } from '@utils/url'
 
 function getUrlFileExtension(fileUrl: string): string {
   const splittedFileUrl = fileUrl.split('.')
@@ -91,9 +83,9 @@ export async function transformPublishFormToDdo(
 
   // Transform from files[0].url to string[] assuming only 1 file
   const filesTransformed = files?.length &&
-    files[0].valid && [files[0].url.replace('javascript:', '')]
+    files[0].valid && [sanitizeUrl(files[0].url)]
   const linksTransformed = links?.length &&
-    links[0].valid && [links[0].url.replace('javascript:', '')]
+    links[0].valid && [sanitizeUrl(links[0].url)]
 
   const newMetadata: Metadata = {
     created: currentTime,
@@ -130,7 +122,8 @@ export async function transformPublishFormToDdo(
                 : getAlgorithmContainerPreset(dockerImage).tag,
             checksum:
               dockerImage === 'custom'
-                ? dockerImageCustomChecksum
+                ? // ? dockerImageCustomChecksum
+                  ''
                 : getAlgorithmContainerPreset(dockerImage).checksum
           },
           ...(parameters?.length && {
@@ -141,13 +134,18 @@ export async function transformPublishFormToDdo(
   }
 
   // this is the default format hardcoded
-  const file = [
-    {
-      type: 'url',
-      url: files[0].url,
-      method: 'GET'
-    }
-  ]
+  const file = {
+    nftAddress,
+    datatokenAddress,
+    files: [
+      {
+        type: 'url',
+        index: 0,
+        url: files[0].url,
+        method: 'GET'
+      }
+    ]
+  }
   const filesEncrypted =
     !isPreview &&
     files?.length &&
@@ -170,7 +168,7 @@ export async function transformPublishFormToDdo(
     '@context': ['https://w3id.org/did/v1'],
     id: did,
     nftAddress,
-    version: '4.0.0',
+    version: '4.1.0',
     chainId,
     metadata: newMetadata,
     services: [newService],
@@ -205,17 +203,16 @@ export async function createTokensAndPricing(
     accountId,
     values.metadata.transferable
   )
-  const { appConfig } = getSiteMetadata()
   LoggerInstance.log('[publish] Creating NFT with metadata', nftCreateData)
 
   // TODO: cap is hardcoded for now to 1000, this needs to be discussed at some point
   const ercParams: Erc20CreateParams = {
-    templateIndex: values.pricing.type === 'dynamic' ? 1 : 2,
+    templateIndex: 2,
     minter: accountId,
     paymentCollector: accountId,
-    mpFeeAddress: appConfig.marketFeeAddress,
-    feeToken: config.oceanTokenAddress,
-    feeAmount: appConfig.publisherMarketOrderFee,
+    mpFeeAddress: marketFeeAddress,
+    feeToken: values.pricing.baseToken.address,
+    feeAmount: publisherMarketOrderFee,
     // max number
     cap: '115792089237316195423570985008687907853269984665640564039457',
     name: values.services[0].dataTokenOptions.name,
@@ -226,75 +223,17 @@ export async function createTokensAndPricing(
 
   let erc721Address, datatokenAddress, txHash
 
-  // TODO: cleaner code for this huge switch !??!?
   switch (values.pricing.type) {
-    case 'dynamic': {
-      // no vesting in market by default, maybe at a later time , vestingAmount and vestedBlocks are hardcoded
-      // we use only ocean as basetoken
-      // swapFeeLiquidityProvider is the swap fee of the liquidity providers
-      // swapFeeMarketRunner is the swap fee of the market where the swap occurs
-      const poolParams: PoolCreationParams = {
-        ssContract: config.sideStakingAddress,
-        baseTokenAddress: config.oceanTokenAddress,
-        baseTokenSender: config.erc721FactoryAddress,
-        publisherAddress: accountId,
-        marketFeeCollector: appConfig.marketFeeAddress,
-        poolTemplateAddress: config.poolTemplateAddress,
-        rate: new Decimal(1).div(values.pricing.price).toString(),
-        baseTokenDecimals: 18,
-        vestingAmount: '0',
-        vestedBlocks: 2726000,
-        initialBaseTokenLiquidity: values.pricing.amountOcean.toString(),
-        swapFeeLiquidityProvider: (values.pricing.swapFee / 100).toString(),
-        swapFeeMarketRunner: appConfig.publisherMarketPoolSwapFee
-      }
-
-      LoggerInstance.log(
-        '[publish] Creating dynamic pricing with poolParams',
-        poolParams
-      )
-
-      // the spender in this case is the erc721Factory because we are delegating
-      const txApprove = await approve(
-        web3,
-        accountId,
-        config.oceanTokenAddress,
-        config.erc721FactoryAddress,
-        values.pricing.amountOcean.toString(),
-        false
-      )
-      LoggerInstance.log('[publish] pool.approve tx', txApprove, nftFactory)
-
-      if (!txApprove) {
-        throw new Error(
-          'MetaMask Approve TX Signature: User denied transaction signature'
-        )
-      }
-
-      const result = await nftFactory.createNftErc20WithPool(
-        accountId,
-        nftCreateData,
-        ercParams,
-        poolParams
-      )
-
-      erc721Address = result.events.NFTCreated.returnValues[0]
-      datatokenAddress = result.events.TokenCreated.returnValues[0]
-      txHash = result.transactionHash
-
-      LoggerInstance.log('[publish] createNftErcWithPool tx', txHash)
-      break
-    }
     case 'fixed': {
       const freParams: FreCreationParams = {
         fixedRateAddress: config.fixedRateExchangeAddress,
-        baseTokenAddress: config.oceanTokenAddress,
+        baseTokenAddress: values.pricing.baseToken.address,
         owner: accountId,
-        marketFeeCollector: appConfig.marketFeeAddress,
-        baseTokenDecimals: 18,
+        marketFeeCollector: marketFeeAddress,
+        baseTokenDecimals: values.pricing.baseToken.decimals,
         datatokenDecimals: 18,
         fixedRate: values.pricing.price.toString(),
-        marketFee: appConfig.publisherMarketFixedSwapFee,
+        marketFee: publisherMarketFixedSwapFee,
         withMint: true
       }
 

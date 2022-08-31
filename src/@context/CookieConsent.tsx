@@ -8,7 +8,7 @@ import React, {
 } from 'react'
 import { deleteCookie, getCookieValue, setCookie } from '@utils/cookies'
 import { UseGdprMetadata, useGdprMetadata } from '@hooks/useGdprMetadata'
-import { useSiteMetadata } from '@hooks/useSiteMetadata'
+import { useMarketMetadata } from './MarketMetadata'
 
 export enum CookieConsentStatus {
   NOT_AVAILABLE = -1,
@@ -32,7 +32,7 @@ const ConsentContext = createContext({} as ConsentProviderValue)
 function ConsentProvider({ children }: { children: ReactNode }): ReactElement {
   const cookies = useGdprMetadata()
 
-  const { privacyPreferenceCenter } = useSiteMetadata().appConfig
+  const { appConfig } = useMarketMetadata()
 
   const [consentStatus, setConsentStatus] = useState({} as ConsentStatus)
 
@@ -41,6 +41,7 @@ function ConsentProvider({ children }: { children: ReactNode }): ReactElement {
     cookies.optionalCookies?.map((cookie) => {
       deleteCookie(cookie.cookieName)
       resetCookieConsent[cookie.cookieName] = status
+      return status
     })
     setConsentStatus(resetCookieConsent)
   }
@@ -80,7 +81,7 @@ function ConsentProvider({ children }: { children: ReactNode }): ReactElement {
   }
 
   useEffect(() => {
-    if (privacyPreferenceCenter !== 'true') return
+    if (appConfig?.privacyPreferenceCenter !== 'true') return
 
     const initialValues = {} as ConsentStatus
     cookies.optionalCookies?.map((cookie) => {
@@ -97,13 +98,15 @@ function ConsentProvider({ children }: { children: ReactNode }): ReactElement {
           initialValues[cookie.cookieName] = CookieConsentStatus.NOT_AVAILABLE
           break
       }
+
+      return initialValues
     })
 
     setConsentStatus(initialValues)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [cookies.optionalCookies, appConfig])
 
   useEffect(() => {
+    // eslint-disable-next-line array-callback-return
     Object.keys(consentStatus).map((cookieName) => {
       switch (consentStatus[cookieName]) {
         case CookieConsentStatus.APPROVED:

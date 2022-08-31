@@ -1,24 +1,12 @@
 import { gql, OperationResult, TypedDocumentNode, OperationContext } from 'urql'
-import { Asset, LoggerInstance } from '@oceanprotocol/lib'
+import { LoggerInstance } from '@oceanprotocol/lib'
 import { getUrqlClientInstance } from '@context/UrqlProvider'
 import { getOceanConfig } from './ocean'
-import { AssetPoolPrice } from '../@types/subgraph/AssetPoolPrice'
 import { AssetPreviousOrder } from '../@types/subgraph/AssetPreviousOrder'
-import {
-  HighestLiquidityAssets_pools as HighestLiquidityAssetsPool,
-  HighestLiquidityAssets as HighestLiquidityGraphAssets
-} from '../@types/subgraph/HighestLiquidityAssets'
-import {
-  PoolShares as PoolSharesList,
-  PoolShares_poolShares as PoolShare
-} from '../@types/subgraph/PoolShares'
 import { OrdersData_orders as OrdersData } from '../@types/subgraph/OrdersData'
-import { UserSalesQuery as UsersSalesList } from '../@types/subgraph/UserSalesQuery'
 import { OpcFeesQuery as OpcFeesData } from '../@types/subgraph/OpcFeesQuery'
-import { calculateUserTVL } from './pool'
-import Decimal from 'decimal.js'
-import { MAX_DECIMALS } from './constants'
 
+import { getPublishedAssets, getTopPublishers } from '@utils/aquarius'
 export interface UserLiquidity {
   price: string
   oceanBalance: string
@@ -27,24 +15,6 @@ export interface UserLiquidity {
 export interface PriceList {
   [key: string]: string
 }
-
-const AssetPoolPriceQuery = gql`
-  query AssetPoolPrice($datatokenAddress: String) {
-    pools(where: { datatoken: $datatokenAddress }) {
-      id
-      spotPrice
-      datatoken {
-        address
-        symbol
-      }
-      baseToken {
-        symbol
-      }
-      datatokenLiquidity
-      baseTokenLiquidity
-    }
-  }
-`
 
 const PreviousOrderQuery = gql`
   query AssetPreviousOrder($id: String!, $account: String!) {
@@ -56,84 +26,6 @@ const PreviousOrderQuery = gql`
     ) {
       createdTimestamp
       tx
-    }
-  }
-`
-const HighestLiquidityAssets = gql`
-  query HighestLiquidityAssets {
-    pools(
-      where: { datatokenLiquidity_gte: 1 }
-      orderBy: baseTokenLiquidity
-      orderDirection: desc
-      first: 15
-    ) {
-      id
-      datatoken {
-        address
-      }
-      baseToken {
-        symbol
-      }
-      baseTokenLiquidity
-      datatokenLiquidity
-    }
-  }
-`
-
-const UserSharesQuery = gql`
-  query UserSharesQuery($user: String, $pools: [String!]) {
-    poolShares(where: { user: $user, pool_in: $pools }) {
-      id
-      shares
-      user {
-        id
-      }
-      pool {
-        id
-        datatoken {
-          address
-          symbol
-        }
-        baseToken {
-          address
-          symbol
-        }
-        datatokenLiquidity
-        baseTokenLiquidity
-        totalShares
-        spotPrice
-        createdTimestamp
-      }
-    }
-  }
-`
-
-const userPoolSharesQuery = gql`
-  query PoolShares($user: String) {
-    poolShares(where: { user: $user, shares_gt: 0.001 }, first: 1000) {
-      id
-      shares
-      user {
-        id
-      }
-      pool {
-        id
-        datatoken {
-          id
-          address
-          symbol
-        }
-        baseToken {
-          id
-          address
-          symbol
-        }
-        baseTokenLiquidity
-        datatokenLiquidity
-        totalShares
-        spotPrice
-        createdTimestamp
-      }
     }
   }
 `
@@ -163,39 +55,26 @@ const UserTokenOrders = gql`
   }
 `
 
-const UserSalesQuery = gql`
-  query UserSalesQuery($user: ID!) {
-    users(where: { id: $user }) {
-      id
-      totalSales
-    }
-  }
-`
-
-// TODO: figure out some way to get this
-const TopSalesQuery = gql`
-  query TopSalesQuery {
-    users(
-      first: 20
-      orderBy: sharesOwned
-      orderDirection: desc
-      where: { tokenBalancesOwned_not: "0" }
-    ) {
-      id
-      tokenBalancesOwned {
-        value
-      }
-    }
-  }
-`
-
 const OpcFeesQuery = gql`
   query OpcFeesQuery($id: ID!) {
     opc(id: $id) {
       swapOceanFee
       swapNonOceanFee
-      consumeFee
+      orderFee
       providerFee
+    }
+  }
+`
+
+const OpcsApprovedTokensQuery = gql`
+  query OpcsApprovedTokensQuery {
+    opcs {
+      approvedTokens {
+        address: id
+        symbol
+        name
+        decimals
+      }
     }
   }
 `
@@ -243,13 +122,10 @@ export async function fetchDataForMultipleChains(
   let datas: any[] = []
   try {
     for (const chainId of chainIds) {
-      // console.log('fetch chainID', chainId)
       const context: OperationContext = getQueryContext(chainId)
       const response = await fetchData(query, variables, context)
-      // console.log('fetch response', response)
       if (!response || response.error) continue
       datas = datas.concat(response?.data)
-      // console.log('fetch datas', datas)
     }
     return datas
   } catch (error) {
@@ -282,10 +158,7 @@ export async function getPreviousOrders(
   account: string,
   assetTimeout: string
 ): Promise<string> {
-  const variables = {
-    id: id,
-    account: account
-  }
+  const variables = { id, account }
   const fetchedPreviousOrders: OperationResult<AssetPreviousOrder> =
     await fetchData(PreviousOrderQuery, variables, null)
   if (fetchedPreviousOrders.data?.orders?.length === 0) return null
@@ -300,101 +173,6 @@ export async function getPreviousOrders(
     } else {
       return null
     }
-  }
-}
-
-export async function getSpotPrice(asset: Asset): Promise<number> {
-  const poolVariables = {
-    datatokenAddress: asset?.services[0].datatokenAddress.toLowerCase()
-  }
-  const queryContext = getQueryContext(Number(asset.chainId))
-
-  const poolPriceResponse: OperationResult<AssetPoolPrice> = await fetchData(
-    AssetPoolPriceQuery,
-    poolVariables,
-    queryContext
-  )
-
-  return poolPriceResponse.data.pools[0].spotPrice
-}
-
-export async function getHighestLiquidityDatatokens(
-  chainIds: number[]
-): Promise<string[]> {
-  const dtList: string[] = []
-  let highestLiquidityAssets: HighestLiquidityAssetsPool[] = []
-
-  for (const chain of chainIds) {
-    const queryContext = getQueryContext(Number(chain))
-    const fetchedPools: OperationResult<HighestLiquidityGraphAssets, any> =
-      await fetchData(HighestLiquidityAssets, null, queryContext)
-    highestLiquidityAssets = highestLiquidityAssets.concat(
-      fetchedPools?.data?.pools
-    )
-  }
-  highestLiquidityAssets.sort(
-    (a, b) => b.baseTokenLiquidity - a.baseTokenLiquidity
-  )
-
-  for (let i = 0; i < highestLiquidityAssets.length; i++) {
-    if (!highestLiquidityAssets[i]?.datatoken?.address) continue
-    dtList.push(highestLiquidityAssets[i].datatoken.address)
-  }
-  return dtList
-}
-
-export async function getAccountTVLInOwnAssets(
-  accountId: string,
-  chainIds: number[],
-  pools: string[]
-): Promise<string> {
-  const queryVariables = {
-    user: accountId.toLowerCase(),
-    pools: pools
-  }
-  const results: PoolSharesList[] = await fetchDataForMultipleChains(
-    UserSharesQuery,
-    queryVariables,
-    chainIds
-  )
-  let tvl = new Decimal(0)
-  // console.log('resss', results)
-
-  for (const result of results) {
-    // console.log('result.poolShares', result.poolShares)
-    for (const poolShare of result.poolShares) {
-      const poolUserTvl = calculateUserTVL(
-        poolShare.shares,
-        poolShare.pool.totalShares,
-        poolShare.pool.baseTokenLiquidity
-      )
-      tvl = tvl.add(new Decimal(poolUserTvl))
-      // console.log('result.poolShares', tvl.toString())
-    }
-  }
-  return tvl.toDecimalPlaces(MAX_DECIMALS).toString()
-}
-
-export async function getPoolSharesData(
-  accountId: string,
-  chainIds: number[]
-): Promise<PoolShare[]> {
-  const variables = { user: accountId?.toLowerCase() }
-  const data: PoolShare[] = []
-  try {
-    const result = await fetchDataForMultipleChains(
-      userPoolSharesQuery,
-      variables,
-      chainIds
-    )
-    for (let i = 0; i < result.length; i++) {
-      result[i].poolShares.forEach((poolShare: PoolShare) => {
-        data.push(poolShare)
-      })
-    }
-    return data
-  } catch (error) {
-    LoggerInstance.error('Error getPoolSharesData: ', error.message)
   }
 }
 
@@ -427,20 +205,10 @@ export async function getUserSales(
   accountId: string,
   chainIds: number[]
 ): Promise<number> {
-  const variables = { user: accountId?.toLowerCase() }
   try {
-    const userSales = await fetchDataForMultipleChains(
-      UserSalesQuery,
-      variables,
-      chainIds
-    )
-    let salesSum = 0
-    for (let i = 0; i < userSales.length; i++) {
-      if (userSales[i].users.length > 0) {
-        salesSum += parseInt(userSales[i].users[0].totalSales)
-      }
-    }
-    return salesSum
+    const result = await getPublishedAssets(accountId, chainIds, null)
+    const { totalOrders } = result.aggregations
+    return totalOrders.value
   } catch (error) {
     LoggerInstance.error('Error getUserSales', error.message)
   }
@@ -450,33 +218,33 @@ export async function getTopAssetsPublishers(
   chainIds: number[],
   nrItems = 9
 ): Promise<AccountTeaserVM[]> {
-  const publisherSales: AccountTeaserVM[] = []
+  const publishers: AccountTeaserVM[] = []
 
-  for (const chain of chainIds) {
-    const queryContext = getQueryContext(Number(chain))
-    const fetchedUsers: OperationResult<UsersSalesList> = await fetchData(
-      TopSalesQuery,
-      null,
-      queryContext
-    )
-    for (let i = 0; i < fetchedUsers.data.users.length; i++) {
-      const publishersIndex = publisherSales.findIndex(
-        (user) => fetchedUsers.data.users[i].id === user.address
-      )
-      if (publishersIndex === -1) {
-        const publisher: AccountTeaserVM = {
-          address: fetchedUsers.data.users[i].id,
-          nrSales: fetchedUsers.data.users[i].totalSales
-        }
-        publisherSales.push(publisher)
-      } else {
-        publisherSales[publishersIndex].nrSales +=
-          publisherSales[publishersIndex].nrSales
-      }
-    }
+  const result = await getTopPublishers(chainIds, null)
+  const { topPublishers } = result.aggregations
+
+  for (let i = 0; i < topPublishers.buckets.length; i++) {
+    publishers.push({
+      address: topPublishers.buckets[i].key,
+      nrSales: parseInt(topPublishers.buckets[i].totalSales.value)
+    })
   }
 
-  publisherSales.sort((a, b) => b.nrSales - a.nrSales)
+  publishers.sort((a, b) => b.nrSales - a.nrSales)
 
-  return publisherSales.slice(0, nrItems)
+  return publishers.slice(0, nrItems)
+}
+
+export async function getOpcsApprovedTokens(
+  chainId: number
+): Promise<TokenInfo[]> {
+  const context = getQueryContext(chainId)
+
+  try {
+    const response = await fetchData(OpcsApprovedTokensQuery, null, context)
+    return response?.data?.opcs[0].approvedTokens
+  } catch (error) {
+    LoggerInstance.error('Error getOpcsApprovedTokens: ', error.message)
+    throw Error(error.message)
+  }
 }

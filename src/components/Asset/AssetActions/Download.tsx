@@ -7,16 +7,16 @@ import ButtonBuy from '@shared/ButtonBuy'
 import { secondsToString } from '@utils/ddo'
 import AlgorithmDatasetsListForCompute from './Compute/AlgorithmDatasetsListForCompute'
 import styles from './Download.module.css'
-import { FileMetadata, LoggerInstance, ZERO_ADDRESS } from '@oceanprotocol/lib'
+import { FileInfo, LoggerInstance, ZERO_ADDRESS } from '@oceanprotocol/lib'
 import { order } from '@utils/order'
-import { AssetExtended } from 'src/@types/AssetExtended'
-import { buyDtFromPool } from '@utils/pool'
 import { downloadFile } from '@utils/provider'
 import { getOrderFeedback } from '@utils/feedback'
 import { getOrderPriceAndFees } from '@utils/accessDetailsAndPricing'
-import { OrderPriceAndFees } from 'src/@types/Price'
 import { toast } from 'react-toastify'
 import { useIsMounted } from '@hooks/useIsMounted'
+import { useMarketMetadata } from '@context/MarketMetadata'
+import Alert from '@shared/atoms/Alert'
+import Loader from '@shared/atoms/Loader'
 
 export default function Download({
   asset,
@@ -27,13 +27,14 @@ export default function Download({
   consumableFeedback
 }: {
   asset: AssetExtended
-  file: FileMetadata
+  file: FileInfo
   isBalanceSufficient: boolean
   dtBalance: string
   fileIsLoading?: boolean
   consumableFeedback?: string
 }): ReactElement {
   const { accountId, web3 } = useWeb3()
+  const { getOpcFeeForToken } = useMarketMetadata()
   const { isInPurgatory, isAssetNetwork } = useAsset()
   const isMounted = useIsMounted()
 
@@ -41,44 +42,73 @@ export default function Download({
   const [hasDatatoken, setHasDatatoken] = useState(false)
   const [statusText, setStatusText] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [isPriceLoading, setIsPriceLoading] = useState(false)
   const [isOwned, setIsOwned] = useState(false)
   const [validOrderTx, setValidOrderTx] = useState('')
-
   const [orderPriceAndFees, setOrderPriceAndFees] =
     useState<OrderPriceAndFees>()
-  useEffect(() => {
-    if (!asset?.accessDetails) return
 
-    setIsOwned(asset?.accessDetails?.isOwned)
-    setValidOrderTx(asset?.accessDetails?.validOrderTx)
+  const isUnsupportedPricing = asset?.accessDetails?.type === 'NOT_SUPPORTED'
+
+  useEffect(() => {
+    if (!asset?.accessDetails || isUnsupportedPricing) return
+
+    asset.accessDetails.isOwned && setIsOwned(asset?.accessDetails?.isOwned)
+    asset.accessDetails.validOrderTx &&
+      setValidOrderTx(asset?.accessDetails?.validOrderTx)
+
     // get full price and fees
     async function init() {
       if (
-        asset?.accessDetails?.addressOrId === ZERO_ADDRESS ||
-        asset?.accessDetails?.type === 'free'
+        asset.accessDetails.addressOrId === ZERO_ADDRESS ||
+        asset.accessDetails.type === 'free' ||
+        isLoading
       )
         return
-      setIsLoading(true)
-      setStatusText('Calculating price including fees.')
-      const orderPriceAndFees = await getOrderPriceAndFees(asset, ZERO_ADDRESS)
-      setOrderPriceAndFees(orderPriceAndFees)
 
-      setIsLoading(false)
+      !orderPriceAndFees && setIsPriceLoading(true)
+
+      const _orderPriceAndFees = await getOrderPriceAndFees(asset, ZERO_ADDRESS)
+      setOrderPriceAndFees(_orderPriceAndFees)
+      !orderPriceAndFees && setIsPriceLoading(false)
     }
 
     init()
-  }, [asset, accountId])
+
+    /**
+     * we listen to the assets' changes to get the most updated price
+     * based on the asset and the poolData's information.
+     * Not adding isLoading and getOpcFeeForToken because we set these here. It is a compromise
+     */
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [asset, accountId, getOpcFeeForToken, isUnsupportedPricing])
 
   useEffect(() => {
     setHasDatatoken(Number(dtBalance) >= 1)
   }, [dtBalance])
 
   useEffect(() => {
-    if (!isMounted || !accountId || !asset?.accessDetails) return
+    if (
+      (asset?.accessDetails?.type === 'fixed' && !orderPriceAndFees) ||
+      !isMounted ||
+      !accountId ||
+      !asset?.accessDetails ||
+      isUnsupportedPricing
+    )
+      return
 
+    /**
+     * disabled in these cases:
+     * - if the asset is not purchasable
+     * - if the user is on the wrong network
+     * - if user balance is not sufficient
+     * - if user has no datatokens
+     */
     const isDisabled =
       !asset?.accessDetails.isPurchasable ||
+      !isAssetNetwork ||
       ((!isBalanceSufficient || !isAssetNetwork) && !isOwned && !hasDatatoken)
+
     setIsDisabled(isDisabled)
   }, [
     isMounted,
@@ -87,39 +117,30 @@ export default function Download({
     isAssetNetwork,
     hasDatatoken,
     accountId,
-    isOwned
+    isOwned,
+    isUnsupportedPricing,
+    orderPriceAndFees
   ])
 
   async function handleOrderOrDownload() {
     setIsLoading(true)
+
     try {
       if (isOwned) {
         setStatusText(
           getOrderFeedback(
-            asset.accessDetails?.baseToken?.symbol,
-            asset.accessDetails?.datatoken?.symbol
+            asset.accessDetails.baseToken?.symbol,
+            asset.accessDetails.datatoken?.symbol
           )[3]
         )
 
         await downloadFile(web3, asset, accountId, validOrderTx)
       } else {
-        if (!hasDatatoken && asset.accessDetails.type === 'dynamic') {
-          setStatusText(
-            getOrderFeedback(
-              asset.accessDetails.baseToken?.symbol,
-              asset.accessDetails.datatoken?.symbol
-            )[0]
-          )
-          const tx = await buyDtFromPool(asset.accessDetails, accountId, web3)
-          if (!tx) {
-            throw new Error()
-          }
-        }
         setStatusText(
           getOrderFeedback(
             asset.accessDetails.baseToken?.symbol,
             asset.accessDetails.datatoken?.symbol
-          )[asset.accessDetails?.type === 'fixed' ? 2 : 1]
+          )[asset.accessDetails.type === 'fixed' ? 2 : 1]
         )
         const orderTx = await order(web3, asset, orderPriceAndFees, accountId)
         if (!orderTx) {
@@ -132,7 +153,7 @@ export default function Download({
       LoggerInstance.error(error)
       const message = isOwned
         ? 'Failed to download file!'
-        : 'Failed to buy datatoken from pool!'
+        : 'An error occurred. Check console for more information.'
       toast.error(message)
     }
     setIsLoading(false)
@@ -144,14 +165,13 @@ export default function Download({
       disabled={isDisabled}
       hasPreviousOrder={isOwned}
       hasDatatoken={hasDatatoken}
+      btSymbol={asset?.accessDetails?.baseToken?.symbol}
       dtSymbol={asset?.datatokens[0]?.symbol}
       dtBalance={dtBalance}
-      datasetLowPoolLiquidity={!asset.accessDetails?.isPurchasable}
       onClick={handleOrderOrDownload}
       assetTimeout={secondsToString(asset.services[0].timeout)}
       assetType={asset?.metadata?.type}
       stepText={statusText}
-      // isLoading={pricingIsLoading || isLoading}
       isLoading={isLoading}
       priceType={asset.accessDetails?.type}
       isConsumable={asset.accessDetails?.isPurchasable}
@@ -160,21 +180,42 @@ export default function Download({
     />
   )
 
+  const AssetAction = ({ asset }: { asset: AssetExtended }) => {
+    return (
+      <div>
+        {isUnsupportedPricing ? (
+          <Alert
+            className={styles.fieldWarning}
+            state="info"
+            text={`No pricing schema available for this asset.`}
+          />
+        ) : (
+          <>
+            {isPriceLoading ? (
+              <Loader message="Calculating full price (including fees)" />
+            ) : (
+              <Price
+                accessDetails={asset.accessDetails}
+                orderPriceAndFees={orderPriceAndFees}
+                conversion
+                size="large"
+              />
+            )}
+
+            {!isInPurgatory && <PurchaseButton />}
+          </>
+        )}
+      </div>
+    )
+  }
+
   return (
     <aside className={styles.consume}>
       <div className={styles.info}>
         <div className={styles.filewrapper}>
-          <FileIcon file={file} isLoading={fileIsLoading} />
+          <FileIcon file={file} isLoading={fileIsLoading} small />
         </div>
-        <div className={styles.pricewrapper}>
-          <Price
-            accessDetails={asset.accessDetails}
-            orderPriceAndFees={orderPriceAndFees}
-            conversion
-            size="large"
-          />
-          {!isInPurgatory && <PurchaseButton />}
-        </div>
+        <AssetAction asset={asset} />
       </div>
 
       {asset?.metadata?.type === 'algorithm' && (
