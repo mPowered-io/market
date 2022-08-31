@@ -74,20 +74,19 @@ export default function AssetSelection({
         {params.map((param, i) => (
           <div key={i}>
             {param.description && <p>{param.description}</p>}
-            <label>{param.label}</label>
+            <label>{param.label}</label>:&nbsp;
             {param.type === 'text' && (
               <input
                 type="text"
                 name={param.name}
-                required={param.required}
                 defaultValue={param.default}
               />
             )}
             {param.type === 'select' && (
               <select name={param.name} required={param.required}>
                 {param.options.map((option, j) => (
-                  <option value={Object.keys(option)[j]}>
-                    {Object.values(option)[j]}
+                  <option value={Object.keys(option)[0]}>
+                    {Object.values(option)[0]}
                   </option>
                 ))}
               </select>
@@ -131,7 +130,7 @@ export default function AssetSelection({
                 <input
                   id={slugify(asset.did)}
                   type={multiple ? 'checkbox' : 'radio'}
-                  className={styleClassesInput}
+                  className={styleClassesInput + ' ' + styles.params}
                   defaultChecked={asset.checked}
                   {...props}
                   disabled={disabled}
@@ -160,17 +159,19 @@ export default function AssetSelection({
                   <Dotdotdot clamp={1} tagName="code" className={styles.did}>
                     {asset.symbol} | {asset.did}
                   </Dotdotdot>
-
-                  {selectedAlgo == asset.did && asset.parameters?.length && (
-                    <Parameters did={asset.did} params={asset.parameters} />
-                  )}
+                  {!multiple &&
+                    selectedAlgo == asset.did &&
+                    asset.parameters?.length > 0 && (
+                      <Parameters did={asset.did} params={asset.parameters} />
+                    )}
                 </label>
 
                 <PriceUnit
                   price={asset.price}
                   type={asset.price === '0' ? 'free' : undefined}
                   size="small"
-                  className={styles.price}
+                  className={styles.price + ' ' + styles.params}
+                  style={{ background: 'yellow' }}
                 />
               </div>
             ))

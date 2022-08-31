@@ -124,3 +124,8 @@
   text-align: center;
   color: var(--color-secondary);
 }
+
+.params {
+  align-self: start;
+  margin-top: 7px;
+}
